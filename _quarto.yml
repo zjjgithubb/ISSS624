@@ -8,7 +8,11 @@ website:
       - text: Hands-On Ex
         menu: 
           - text: Hands-On Ex 1
-            href: handson_ex1.qmd
+            href: handson_ex1.html
+      - text: In-Class Ex
+        menu: 
+          - text: In-Class Ex 01
+            href: InClassEx/Ex01/inclass_Ex01.html
     right:
       - href: index.qmd
         text: Home

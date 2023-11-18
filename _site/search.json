@@ -19,5 +19,12 @@
     "title": "Hands-On Ex 1",
     "section": "",
     "text": "Overview\nTesting for the insertion of the page"
+  },
+  {
+    "objectID": "InClassEx/Ex01/data/geospatial/MPSZ-2019.html",
+    "href": "InClassEx/Ex01/data/geospatial/MPSZ-2019.html",
+    "title": "ISSS624",
+    "section": "",
+    "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     dataset\n\n\n        0 0     false"
   }
 ]
