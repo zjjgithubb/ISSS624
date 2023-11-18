@@ -1,3 +1,100 @@
 ---
 title: "In-class Ex 1"
+date: "18 Nov 23"
+date-modified: "last-modified" 
+
+format: html
+execute: 
+  echo: true
+  eval: true
+  warning: false
+  
+editor: visual 
 ---
+
+## Getting Started
+
+Using pacman to load the required packages.
+
+-   tmap - for thematic mapping
+
+-   sf - for geospatial data handling
+
+-   tidyverse - for non-spatial data handling
+
+```{r}
+
+pacman::p_load(sf, tmap, tidyverse)
+```
+
+## Importing kml file
+
+Using the data from LTA on the Location of the Bus Stops in Singapore
+
+Available at: <https://datamall.lta.gov.sg/>
+
+Current data is based on Jul 23 (updated quarterly).
+
+```{r}
+
+busstops = st_read(dsn = "data/geospatial", 
+               layer = "BusStop") %>%
+  st_transform (crs = 3414)
+```
+
+```{r}
+plot(busstops)
+```
+
+## Bus Origin and Destination Data
+
+We will also import the *Passengers, Origin and Destination* data by using the *readr package* and *read_csv*.
+
+```{r}
+
+odbus_aug <- read_csv("data/aspatial/origin_destination_bus_202308.csv")
+
+odbus_sep <- read_csv("data/aspatial/origin_destination_bus_202309.csv")
+
+odbus_oct <- read_csv("data/aspatial/origin_destination_bus_202310.csv")
+
+head(odbus_aug, n=5)
+```
+
+We need to convert the Origin_PT_Code data into factor to allow R to manipulate the data more easily.
+
+```{r}
+
+odbus_aug$ORIGIN_PT_CODE <- as.factor(odbus_aug$ORIGIN_PT_CODE)
+
+odbus_aug$DESTINATION_PT_CODE <- as.factor(odbus_aug$DESTINATION_PT_CODE)
+```
+
+Filter the time between 7 am to 9 am (just before 10am) on Weekdays, Group by the Origin Bus Stops.
+
+```{r}
+
+origtrip_7_9 <- odbus_aug %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 7 &
+           TIME_PER_HOUR <= 9) %>%
+  group_by(ORIGIN_PT_CODE) %>%
+  summarise (TRIPS = sum(TOTAL_TRIPS))
+```
+
+## Map Planning Sub-zone 2019
+
+We will also import that Map Planning Sub-zone 2019 data. Need to transform the coordinates to 3414, which will be in metres instead of decimal/degrees.
+
+```{r}
+
+mpsz19 = st_read(dsn = "data/geospatial", 
+               layer = "MPSZ-2019") %>%
+  st_transform (crs = 3414)
+
+head(mpsz19, n=5)
+
+plot(mpsz19)
+```
+
+## Joining the data of the Bus Stop Code, Location and which Planning Sub-zone 
