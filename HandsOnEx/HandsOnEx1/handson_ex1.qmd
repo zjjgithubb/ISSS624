@@ -13,7 +13,7 @@ execute:
 editor: visual 
 ---
 
-## Loading Packages 
+## Loading Packages
 
 ```{r}
 
@@ -32,18 +32,18 @@ Extracted the necessary data sets from the following sources:
 
 ```{r}
 
-mpsz = st_read(dsn = "InClassEx/Ex01/data/geospatial", 
+mpsz = st_read(dsn = "data/geospatial", 
                layer = "MP14_SUBZONE_WEB_PL")
 
 
-cyclingpath = st_read(dsn = "InClassEx/Ex01/data/geospatial", 
+cyclingpath = st_read(dsn = "data/geospatial", 
                       layer = "CyclingPathGazette")  
 
-preschool = st_read("InClassEx/Ex01/data/geospatial/PreSchoolsLocation.kml")
+preschool = st_read("data/geospatial/PreSchoolsLocation.kml")
 
 ```
 
-## Checking the Data 
+## Checking the Data
 
 Simple data checking to verify that the data is correct.
 
@@ -83,7 +83,7 @@ st_crs(mpsz3414)
 
 Notice that the code is now 3414.
 
-### Need to Transform Projection Sometimes 
+### Need to Transform Projection Sometimes
 
 It is very common for us to transform the original data from geographic coordinate system to projected coordinate system. This is because geographic coordinate system is not appropriate if the analysis need to use distance or/and area measurements.
 
@@ -96,13 +96,13 @@ preschool3414 <- st_transform(preschool,
 st_geometry(preschool3414) #check that it is transformed to svy21
 ```
 
-## Dealing with Aspatial Data 
+## Dealing with Aspatial Data
 
 Aspatial data are data not containing geographical coordinates, but may contain other form of x- y- coordinates. Here, we are using a data from AirBnb and we will try to transform it to Geographic Coordinate System.
 
 ```{r}
 
-listings <- read_csv("InClassEx/Ex01/data/aspatial/listings.csv")
+listings <- read_csv("data/aspatial/listings.csv")
 
 list(listings) 
 
@@ -121,9 +121,9 @@ Simple plotting done below. \<How to add a basemap below?\>
 plot (listings_sf)
 ```
 
-## Geoprocessing with sf package 
+## Geoprocessing with sf package
 
-### Buffering 
+### Buffering
 
 The scenario:
 
@@ -151,7 +151,7 @@ Lastly, sum() of Base R will be used to derive the total land involved.
 sum(buffer_cycling$AREA)
 ```
 
-## Point-in-polygon count 
+## Point-in-polygon count
 
 The scenario:
 
@@ -196,7 +196,7 @@ mpsz3414 <- mpsz3414 %>%
   mutate(`PreSch Density` = `PreSch Count`/Area * 1000000)
 ```
 
-## Exploratory Data Analysis 
+## Exploratory Data Analysis
 
 Firstly, we will plot a histogram to reveal the distribution of `PreSch Density`. Conventionally, *hist()* of R Graphics will be used as shown in the code chunk below.
 
@@ -254,13 +254,13 @@ In this hands-on exercise, the key R package use is [**tmap**](https://cran.r-pr
 
 Among the four packages, **readr**, **tidyr** and **dplyr** are part of **tidyverse** package.
 
-### Utilising Data on Planning Subzone and Singapore Residents 
+### Utilising Data on Planning Subzone and Singapore Residents
 
 Two data set will be used to create the choropleth map. They are:
 
 -   Master Plan 2014 Subzone Boundary (Web) (i.e. `MP14_SUBZONE_WEB_PL`) in ESRI shapefile format. It can be downloaded at [data.gov.sg](https://data.gov.sg/) This is a geospatial data. It consists of the geographical boundary of Singapore at the planning subzone level. The data is based on URA Master Plan 2014.
 
--   Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2011-2020 in csv format (i.e. `respopagesextod2011to2020.csv`). This is an aspatial data fie. It can be downloaded at [Department of Statistics, Singapore](https://www.singstat.gov.sg/) Although it does not contain any coordinates values, but it\'s PA and SZ fields can be used as unique identifiers to geocode to `MP14_SUBZONE_WEB_PL` shapefile.
+-   Singapore Residents by Planning Area / Subzone, Age Group, Sex and Type of Dwelling, June 2011-2020 in csv format (i.e. `respopagesextod2011to2020.csv`). This is an aspatial data fie. It can be downloaded at [Department of Statistics, Singapore](https://www.singstat.gov.sg/) Although it does not contain any coordinates values, but it's PA and SZ fields can be used as unique identifiers to geocode to `MP14_SUBZONE_WEB_PL` shapefile.
 
 Importing Data:
 
@@ -270,10 +270,10 @@ Importing the attribute data:
 
 ```{r}
 
-popdata <- read_csv("InClassEx/Ex01/data/aspatial/respopagesexfa2011to2020.csv")
+popdata <- read_csv("data/aspatial/respopagesexfa2011to2020.csv")
 ```
 
-### Data Preparation 
+### Data Preparation
 
 Before a thematic map can be prepared, we need to prepare data table with year 2020 values. The data table should include the variables PA, SZ, YOUNG, ECONOMY ACTIVE, AGED, TOTAL, DEPENDENCY.
 
@@ -309,7 +309,7 @@ mutate(`DEPENDENCY` = (`YOUNG` + `AGED`)
        `TOTAL`, `DEPENDENCY`)
 ```
 
-### Joining the data with geospatial data 
+### Joining the data with geospatial data
 
 ```{r}
 
@@ -328,10 +328,10 @@ Thing to learn from the code chunk above:
 
 ```{r}
 
-write_rds(mpsz_pop2020, "InClassEx/Ex01/data/rds/mpszpop2020.rds")
+write_rds(mpsz_pop2020, "data/rds/mpszpop2020.rds")
 ```
 
-### Using tmap 
+### Using tmap
 
 Two approaches can be used to prepare thematic map using *tmap*, they are:
 
@@ -350,13 +350,13 @@ qtm(mpsz_pop2020,
 
 Things to learn from the code chunk above:
 
--   *tmap_mode()* with \"plot\" option is used to produce a static map. For interactive mode, \"view\" option should be used.
+-   *tmap_mode()* with "plot" option is used to produce a static map. For interactive mode, "view" option should be used.
 
 -   *fill* argument is used to map the attribute (i.e. DEPENDENCY)
 
 #### Using tmap elements
 
-Despite its usefulness of drawing a choropleth map quickly and easily, the disadvantge of *qtm()* is that it makes aesthetics of individual layers harder to control. To draw a high quality cartographic choropleth map as shown in the figure below, **tmap**\'s drawing elements should be used.
+Despite its usefulness of drawing a choropleth map quickly and easily, the disadvantge of *qtm()* is that it makes aesthetics of individual layers harder to control. To draw a high quality cartographic choropleth map as shown in the figure below, **tmap**'s drawing elements should be used.
 
 ```{r}
 
@@ -401,7 +401,7 @@ tm_shape(mpsz_pop2020)+
 
 Things to learn from *tm_polygons()*:
 
--   The default interval binning used to draw the choropleth map is called \"pretty\". A detailed discussion of the data classification methods supported by **tmap** will be provided in sub-section 4.3.
+-   The default interval binning used to draw the choropleth map is called "pretty". A detailed discussion of the data classification methods supported by **tmap** will be provided in sub-section 4.3.
 
 -   The default colour scheme used is `YlOrRd` of ColorBrewer. You will learn more about the color scheme in sub-section 4.4.
 
@@ -438,7 +438,7 @@ Beside *alpha* argument, there are three other arguments for *tm_borders()*, the
 
 -   *lwd* = border line width. The default is 1, and
 
--   *lty* = border line type. The default is \"solid\".
+-   *lty* = border line type. The default is "solid".
 
 #### Data Classification methods of tmap
 
@@ -492,7 +492,7 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-#### DIY - Using different Classification methods supported by tmap and compare their differences 
+#### DIY - Using different Classification methods supported by tmap and compare their differences
 
 Using quantile
 
@@ -517,7 +517,7 @@ tm_shape(mpsz_pop2020)+
   tm_borders(alpha = 0.5)
 ```
 
-#### DIY - Similar Classification methods but with different number of classes - what are the observations? 
+#### DIY - Similar Classification methods but with different number of classes - what are the observations?
 
 Using different classes
 
@@ -606,7 +606,7 @@ tm_shape(mpsz_pop2020)+
 
 Notice that the choropleth map is shaded in green.
 
-To reverse the colour shading, add a \"-\" prefix.
+To reverse the colour shading, add a "-" prefix.
 
 ```{r}
 
@@ -655,7 +655,7 @@ tm_shape(mpsz_pop2020)+
   tmap_style("classic")
 ```
 
-##### Cartographic Furniture 
+##### Cartographic Furniture
 
 ```{r}
 
