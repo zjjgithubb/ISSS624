@@ -97,4 +97,4 @@ head(mpsz19, n=5)
 plot(mpsz19)
 ```
 
-## Joining the data of the Bus Stop Code, Location and which Planning Sub-zone 
+## Joining the data of the Bus Stop Code, Location and which Planning Sub-zone
