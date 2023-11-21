@@ -98,3 +98,87 @@ plot(mpsz19)
 ```
 
 ## Joining the data of the Bus Stop Code, Location and which Planning Sub-zone
+
+Using sf_intersection to join the data.
+
+```{r}
+
+busstop_mpsz <- st_intersection(busstops, mpsz19) %>%
+  select(BUS_STOP_N, SUBZONE_C) %>%
+  st_drop_geometry()
+```
+
+-   `st_intersection()` is used to perform point and polygon overly and the output will be in point sf object.
+
+-   `select()` of dplyr package is then use to retain only BUS_STOP_N and SUBZONE_C in the busstop_mpsz sf data frame.
+
+-   five bus stops are excluded in the resultant data frame because they are outside of Singapore boundary.
+
+Save the output into rds format.
+
+```{r}
+
+write_rds(busstop_mpsz, "data/rds/busstop_mpsz.csv")  
+```
+
+Append the data
+
+```{r}
+
+origin_data <- left_join(origtrip_7_9 , busstop_mpsz,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_SZ = SUBZONE_C)
+```
+
+To check for duplicating records:
+
+```{r}
+
+duplicate <- origin_data %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+```
+
+If there are, can use the following to retain the unique records:
+
+```{r}
+
+origin_data <- unique(origin_data)
+```
+
+To check if the duplicating records are fully addressed:
+
+```{r}
+
+mpsz_origtrip <- left_join(mpsz19, 
+                           origin_data,
+                           by = c("SUBZONE_C" = "ORIGIN_SZ"))
+
+```
+
+## Visualisation of the Data 
+
+Using tmap
+
+```{r}
+
+tm_shape(mpsz_origtrip)+
+  tm_fill("TRIPS", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "Passenger trips") +
+  tm_layout(main.title = "Passenger trips generated at planning sub-zone level",
+            main.title.position = "center",
+            main.title.size = 1.2,
+            legend.height = 0.45, 
+            legend.width = 0.35,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2) +
+  tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
+             position = c("left", "bottom"))
+```
