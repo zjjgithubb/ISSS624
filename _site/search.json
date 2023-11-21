@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ISSS624",
+    "title": "ISSS624 - Geospatial Analysis",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "ISSS624 Documentation Website\nReferences and Coursework:\nSyllabus and Coursework: https://isss624-ay2023-24nov.netlify.app/\nR for Geospatial Data Science and Analytics: https://r4gdsa.netlify.app/"
   },
   {
     "objectID": "about.html",

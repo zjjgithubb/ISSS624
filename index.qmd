@@ -1,11 +1,14 @@
 ---
-title: "ISSS624"
+title: "ISSS624 - Geospatial Analysis"
+author: "Cheng Chun Chieh"
+date: "18 Nov 23"
+date-modified: "last-modified"
 ---
 
-This is a Quarto website.
+**ISSS624 Documentation Website**
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+References and Coursework:
 
-```{r}
-1 + 1
-```
+Syllabus and Coursework: <https://isss624-ay2023-24nov.netlify.app/>
+
+R for Geospatial Data Science and Analytics: <https://r4gdsa.netlify.app/>
