@@ -8,7 +8,9 @@ website:
       - text: Hands-On Ex
         menu: 
           - text: Hands-On Ex 1
-            href: handson_ex1.html
+            href: HandsOnEx/HandsOnEx1/handson_ex1.html
+          - text: Hands-On Ex 2
+            href: HandsOnEx/HandsOnEx2/handsonex2.html
       - text: In-Class Ex
         menu: 
           - text: In-Class Ex 01
