@@ -216,17 +216,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#computing-contiguity-spatial-weights-1" id="toc-computing-contiguity-spatial-weights-1" class="nav-link" data-scroll-target="#computing-contiguity-spatial-weights-1">Computing Contiguity Spatial Weights</a></li>
   <li><a href="#global-spatial-autocorrelation-morans-i" id="toc-global-spatial-autocorrelation-morans-i" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-morans-i">Global Spatial Autocorrelation: Moran’s I</a>
   <ul class="collapse">
-  <li><a href="#computing-monte-carlo-morans-i" id="toc-computing-monte-carlo-morans-i" class="nav-link" data-scroll-target="#computing-monte-carlo-morans-i">Computing Monte Carlo Moran's I</a></li>
-  <li><a href="#visualising-monte-carlo-morans-i" id="toc-visualising-monte-carlo-morans-i" class="nav-link" data-scroll-target="#visualising-monte-carlo-morans-i">Visualising Monte Carlo Moran's I</a></li>
+  <li><a href="#computing-monte-carlo-morans-i" id="toc-computing-monte-carlo-morans-i" class="nav-link" data-scroll-target="#computing-monte-carlo-morans-i">Computing Monte Carlo Moran’s I</a></li>
+  <li><a href="#visualising-monte-carlo-morans-i" id="toc-visualising-monte-carlo-morans-i" class="nav-link" data-scroll-target="#visualising-monte-carlo-morans-i">Visualising Monte Carlo Moran’s I</a></li>
   </ul></li>
-  <li><a href="#global-spatial-autocorrelation-gearys-c" id="toc-global-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-gearys-c"><strong>Global Spatial Autocorrelation: Geary's C</strong></a>
+  <li><a href="#global-spatial-autocorrelation-gearys-c" id="toc-global-spatial-autocorrelation-gearys-c" class="nav-link" data-scroll-target="#global-spatial-autocorrelation-gearys-c"><strong>Global Spatial Autocorrelation: Geary’s C</strong></a>
   <ul class="collapse">
   <li><a href="#visualising-the-monte-carlo-gearys-c" id="toc-visualising-the-monte-carlo-gearys-c" class="nav-link" data-scroll-target="#visualising-the-monte-carlo-gearys-c">Visualising the Monte Carlo Geary’s C</a></li>
   </ul></li>
   <li><a href="#spatial-correlogram" id="toc-spatial-correlogram" class="nav-link" data-scroll-target="#spatial-correlogram">Spatial Correlogram</a>
   <ul class="collapse">
-  <li><a href="#compute-morans-i-correlogram" id="toc-compute-morans-i-correlogram" class="nav-link" data-scroll-target="#compute-morans-i-correlogram"><strong>Compute Moran's I correlogram</strong></a></li>
-  <li><a href="#compute-gearys-c-correlogram-and-plot" id="toc-compute-gearys-c-correlogram-and-plot" class="nav-link" data-scroll-target="#compute-gearys-c-correlogram-and-plot"><strong>Compute Geary's C correlogram and plot</strong></a></li>
+  <li><a href="#compute-morans-i-correlogram" id="toc-compute-morans-i-correlogram" class="nav-link" data-scroll-target="#compute-morans-i-correlogram"><strong>Compute Moran’s I correlogram</strong></a></li>
+  <li><a href="#compute-gearys-c-correlogram-and-plot" id="toc-compute-gearys-c-correlogram-and-plot" class="nav-link" data-scroll-target="#compute-gearys-c-correlogram-and-plot"><strong>Compute Geary’s C correlogram and plot</strong></a></li>
   </ul></li>
   <li><a href="#cluster-and-outlier-analysis" id="toc-cluster-and-outlier-analysis" class="nav-link" data-scroll-target="#cluster-and-outlier-analysis">Cluster and Outlier Analysis</a>
   <ul class="collapse">
@@ -242,7 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#hot-spot-and-cold-spot-area-analysis" id="toc-hot-spot-and-cold-spot-area-analysis" class="nav-link" data-scroll-target="#hot-spot-and-cold-spot-area-analysis"><strong>Hot Spot and Cold Spot Area Analysis</strong></a>
   <ul class="collapse">
-  <li><a href="#getis-and-ords-g-statistics" id="toc-getis-and-ords-g-statistics" class="nav-link" data-scroll-target="#getis-and-ords-g-statistics"><strong>Getis and Ord's G-Statistics</strong></a></li>
+  <li><a href="#getis-and-ords-g-statistics" id="toc-getis-and-ords-g-statistics" class="nav-link" data-scroll-target="#getis-and-ords-g-statistics"><strong>Getis and Ord’s G-Statistics</strong></a></li>
   <li><a href="#deriving-spatial-weight-matrix" id="toc-deriving-spatial-weight-matrix" class="nav-link" data-scroll-target="#deriving-spatial-weight-matrix">Deriving spatial weight matrix</a></li>
   <li><a href="#computing-gi-statistics" id="toc-computing-gi-statistics" class="nav-link" data-scroll-target="#computing-gi-statistics">Computing GI statistics</a></li>
   </ul></li>
@@ -301,12 +301,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>compute and plot spatial correlogram using appropriate function of <strong>spdep</strong> package.</p></li>
 </ul></li>
 <li><p>compute Local Indicator of Spatial Association (LISA) statistics for detecting clusters and outliers by using appropriate functions <strong>spdep</strong> package;</p></li>
-<li><p>compute Getis-Ord's Gi-statistics for detecting hot spot or/and cold spot area by using appropriate functions of <strong>spdep</strong> package; and</p></li>
+<li><p>compute Getis-Ord’s Gi-statistics for detecting hot spot or/and cold spot area by using appropriate functions of <strong>spdep</strong> package; and</p></li>
 <li><p>to visualise the analysis output by using <strong>tmap</strong> package.</p></li>
 </ul>
 <section id="the-study-area-and-data" class="level2">
 <h2 class="anchored" data-anchor-id="the-study-area-and-data">The Study Area and Data</h2>
-<p>Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are even distributed geographically. If the answer is&nbsp;<strong>No</strong>. Then, our next question will be "is there sign of spatial clustering?". And, if the answer for this question is yes, then our next question will be "where are these clusters?"</p>
+<p>Our task in this study, hence, is to apply appropriate spatial statistical methods to discover if development are even distributed geographically. If the answer is&nbsp;<strong>No</strong>. Then, our next question will be “is there sign of spatial clustering?”. And, if the answer for this question is yes, then our next question will be “where are these clusters?”</p>
 <p>We will be using the following data sets:</p>
 <ul>
 <li><p>Geospatial Data: Hunan County Boundary Layer</p></li>
@@ -1425,7 +1425,7 @@ W 88 7744 88 37.86334 365.9147</code></pre>
 </div>
 <p>The input of <em>nb2listw()</em> must be an object of class <strong>nb</strong>. The syntax of the function has two major arguments, namely style and zero.poly.</p>
 <ul>
-<li><p><em>style</em> can take values "W", "B", "C", "U", "minmax" and "S". B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al.&nbsp;1999, p.&nbsp;167-168 (sums over all links to n).</p></li>
+<li><p><em>style</em> can take values “W”, “B”, “C”, “U”, “minmax” and “S”. B is the basic binary coding, W is row standardised (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al.&nbsp;1999, p.&nbsp;167-168 (sums over all links to n).</p></li>
 <li><p>If <em>zero policy</em> is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row t(rep(0, length=length(neighbours))) %*% x, for arbitrary numerical vector x of length length(neighbours). The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.</p></li>
 <li><p>The zero.policy=TRUE option allows for lists of non-neighbors. This should be used with caution since the user may not be aware of missing neighbors in their dataset however, a zero.policy of FALSE would return an error.</p></li>
 </ul>
@@ -3020,7 +3020,7 @@ W 88 7744 88 37.86334 365.9147</code></pre>
 </section>
 <section id="global-spatial-autocorrelation-morans-i" class="level2">
 <h2 class="anchored" data-anchor-id="global-spatial-autocorrelation-morans-i">Global Spatial Autocorrelation: Moran’s I</h2>
-<p>We&nbsp;will learn how to perform Moran's I statistics testing by using&nbsp;<a href="https://r-spatial.github.io/spdep/reference/moran.test.html"><em>moran.test()</em></a>&nbsp;of&nbsp;<strong>spdep.</strong></p>
+<p>We&nbsp;will learn how to perform Moran’s I statistics testing by using&nbsp;<a href="https://r-spatial.github.io/spdep/reference/moran.test.html"><em>moran.test()</em></a>&nbsp;of&nbsp;<strong>spdep.</strong></p>
 <p>Moran’s test is a statistical test used in spatial statistics to assess the presence of spatial autocorrelation in a dataset. Spatial autocorrelation refers to the tendency of similar values to be clustered together in space. Moran’s test is named after Patrick Alfred Pierce Moran, who introduced the concept.</p>
 <p>The test is based on Moran’s I statistic, which quantifies the degree of spatial autocorrelation. Moran’s I ranges from -1 (indicating perfect dispersion) to 1 (indicating perfect positive spatial autocorrelation). A value close to 0 suggests a random spatial pattern.</p>
 <p>Here’s a brief overview of how Moran’s test works:</p>
@@ -3073,7 +3073,7 @@ Moran I statistic       Expectation          Variance
 </div>
 <p>Given that the p-value is less than 0.05, there is sufficient evidence to reject the Null Hypothesis, and there is spatial autocorrelation in the dataset.</p>
 <section id="computing-monte-carlo-morans-i" class="level3">
-<h3 class="anchored" data-anchor-id="computing-monte-carlo-morans-i">Computing Monte Carlo Moran's I</h3>
+<h3 class="anchored" data-anchor-id="computing-monte-carlo-morans-i">Computing Monte Carlo Moran’s I</h3>
 <p>Monte Carlo Moran’s I is an extension of the traditional Moran’s I test that involves using Monte Carlo simulation to assess the statistical significance of the observed Moran’s I statistic. The traditional Moran’s I test compares the observed Moran’s I value to its expected value under the null hypothesis, but Monte Carlo Moran’s I provides a more robust assessment by generating a distribution of Moran’s I values under the null hypothesis through repeated random permutations of the data.</p>
 <p>Here’s how Monte Carlo Moran’s I is typically conducted:</p>
 <ol type="1">
@@ -3103,7 +3103,7 @@ Moran I statistic       Expectation          Variance
 </ul></li>
 </ol>
 <p>Monte Carlo Moran’s I is particularly useful when dealing with small sample sizes and non-normal distributions, where the traditional asymptotic distribution of Moran’s I may not be accurate. By simulating the null distribution, the Monte Carlo approach provides a more reliable assessment of statistical significance.</p>
-<p>The code chunk below performs permutation test for Moran's I statistic by using&nbsp;<a href="https://r-spatial.github.io/spdep/reference/moran.mc.html"><em>moran.mc()</em></a>&nbsp;of&nbsp;<strong>spdep</strong>. A total of 1000 simulation will be performed.</p>
+<p>The code chunk below performs permutation test for Moran’s I statistic by using&nbsp;<a href="https://r-spatial.github.io/spdep/reference/moran.mc.html"><em>moran.mc()</em></a>&nbsp;of&nbsp;<strong>spdep</strong>. A total of 1000 simulation will be performed.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>bperm<span class="ot">=</span> <span class="fu">moran.mc</span>(hunan<span class="sc">$</span>GDPPC, </span>
@@ -3132,8 +3132,8 @@ alternative hypothesis: greater</code></pre>
 <p>In summary, the result suggests that there is significant positive spatial autocorrelation in the <strong><code>GDPPC</code></strong> variable in the <strong><code>hunan</code></strong> dataset using the specified spatial weights.</p>
 </section>
 <section id="visualising-monte-carlo-morans-i" class="level3">
-<h3 class="anchored" data-anchor-id="visualising-monte-carlo-morans-i">Visualising Monte Carlo Moran's I</h3>
-<p>It is always a good practice for us the examine the simulated Moran's I test statistics in greater detail. This can be achieved by plotting the distribution of the statistical values as a histogram by using the code chunk below.</p>
+<h3 class="anchored" data-anchor-id="visualising-monte-carlo-morans-i">Visualising Monte Carlo Moran’s I</h3>
+<p>It is always a good practice for us the examine the simulated Moran’s I test statistics in greater detail. This can be achieved by plotting the distribution of the statistical values as a histogram by using the code chunk below.</p>
 <p>In the code chunk below <a href="https://www.rdocumentation.org/packages/graphics/versions/3.6.2/topics/hist"><em>hist()</em></a> and <a href="https://www.rdocumentation.org/packages/graphics/versions/3.6.2/topics/abline"><em>abline()</em></a> of R Graphics are used.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(bperm<span class="sc">$</span>res[<span class="dv">1</span><span class="sc">:</span><span class="dv">999</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3192,7 +3192,7 @@ alternative hypothesis: greater</code></pre>
 </section>
 </section>
 <section id="global-spatial-autocorrelation-gearys-c" class="level2">
-<h2 class="anchored" data-anchor-id="global-spatial-autocorrelation-gearys-c"><strong>Global Spatial Autocorrelation: Geary's C</strong></h2>
+<h2 class="anchored" data-anchor-id="global-spatial-autocorrelation-gearys-c"><strong>Global Spatial Autocorrelation: Geary’s C</strong></h2>
 <p>Geary’s C is a measure of global spatial autocorrelation that evaluates whether the values of a variable in a dataset are spatially clustered or dispersed. It is often used as an alternative to Moran’s I. Geary’s C is sensitive to both positive and negative spatial autocorrelation.</p>
 <p>The formula for Geary’s C is given by:</p>
 <p><img src="Geary test.png" class="img-fluid"></p>
@@ -3233,7 +3233,7 @@ Geary C statistic       Expectation          Variance
 </ul>
 <p>In summary, the Geary’s C test with randomization suggests that there is a significant positive spatial autocorrelation in the distribution of <strong><code>GDPPC</code></strong> in the <strong><code>hunan</code></strong> dataset based on the specified spatial weights <strong><code>rswm_q</code></strong>. The values are clustered in space more than would be expected by random chance.</p>
 <section id="computing-monte-carlo-gearys-c" class="level4">
-<h4 class="anchored" data-anchor-id="computing-monte-carlo-gearys-c">Computing Monte Carlo Geary's C</h4>
+<h4 class="anchored" data-anchor-id="computing-monte-carlo-gearys-c">Computing Monte Carlo Geary’s C</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb119"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb119-2"><a href="#cb119-2" aria-hidden="true" tabindex="-1"></a>bperm<span class="ot">=</span><span class="fu">geary.mc</span>(hunan<span class="sc">$</span>GDPPC, </span>
@@ -3299,10 +3299,10 @@ alternative hypothesis: greater</code></pre>
 </section>
 <section id="spatial-correlogram" class="level2">
 <h2 class="anchored" data-anchor-id="spatial-correlogram">Spatial Correlogram</h2>
-<p>Spatial correlograms are great to examine patterns of spatial autocorrelation in your data or model residuals. They show how correlated are pairs of spatial observations when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran's I or Geary's c) against distance.Although correlograms are not as fundamental as variograms (a keystone concept of geostatistics), they are very useful as an exploratory and descriptive tool. For this purpose they actually provide richer information than variograms.</p>
+<p>Spatial correlograms are great to examine patterns of spatial autocorrelation in your data or model residuals. They show how correlated are pairs of spatial observations when you increase the distance (lag) between them - they are plots of some index of autocorrelation (Moran’s I or Geary’s c) against distance.Although correlograms are not as fundamental as variograms (a keystone concept of geostatistics), they are very useful as an exploratory and descriptive tool. For this purpose they actually provide richer information than variograms.</p>
 <section id="compute-morans-i-correlogram" class="level3">
-<h3 class="anchored" data-anchor-id="compute-morans-i-correlogram"><strong>Compute Moran's I correlogram</strong></h3>
-<p>In the code chunk below,&nbsp;<a href="https://r-spatial.github.io/spdep/reference/sp.correlogram.html"><em>sp.correlogram()</em></a>&nbsp;of&nbsp;<strong>spdep</strong>&nbsp;package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran's I. The&nbsp;<strong>plot()</strong>&nbsp;of base Graph is then used to plot the output.</p>
+<h3 class="anchored" data-anchor-id="compute-morans-i-correlogram"><strong>Compute Moran’s I correlogram</strong></h3>
+<p>In the code chunk below,&nbsp;<a href="https://r-spatial.github.io/spdep/reference/sp.correlogram.html"><em>sp.correlogram()</em></a>&nbsp;of&nbsp;<strong>spdep</strong>&nbsp;package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Moran’s I. The&nbsp;<strong>plot()</strong>&nbsp;of base Graph is then used to plot the output.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>MI_corr <span class="ot">&lt;-</span> <span class="fu">sp.correlogram</span>(wm_q, </span>
 <span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>                          hunan<span class="sc">$</span>GDPPC, </span>
@@ -3349,8 +3349,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <p>In summary, the spatial correlogram suggests that there is significant positive spatial autocorrelation in the <strong><code>GDPPC</code></strong> variable at various lag distances, based on Moran’s I. The values are clustered or dispersed in space more than would be expected by random chance.</p>
 </section>
 <section id="compute-gearys-c-correlogram-and-plot" class="level3">
-<h3 class="anchored" data-anchor-id="compute-gearys-c-correlogram-and-plot"><strong>Compute Geary's C correlogram and plot</strong></h3>
-<p>In the code chunk below,&nbsp;<em>sp.correlogram()</em>&nbsp;of&nbsp;<strong>spdep</strong>&nbsp;package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary's C. The&nbsp;<strong>plot()</strong>&nbsp;of base Graph is then used to plot the output.</p>
+<h3 class="anchored" data-anchor-id="compute-gearys-c-correlogram-and-plot"><strong>Compute Geary’s C correlogram and plot</strong></h3>
+<p>In the code chunk below,&nbsp;<em>sp.correlogram()</em>&nbsp;of&nbsp;<strong>spdep</strong>&nbsp;package is used to compute a 6-lag spatial correlogram of GDPPC. The global spatial autocorrelation used in Geary’s C. The&nbsp;<strong>plot()</strong>&nbsp;of base Graph is then used to plot the output.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb131"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb131-1"><a href="#cb131-1" aria-hidden="true" tabindex="-1"></a>GC_corr <span class="ot">&lt;-</span> <span class="fu">sp.correlogram</span>(wm_q, </span>
 <span id="cb131-2"><a href="#cb131-2" aria-hidden="true" tabindex="-1"></a>                          hunan<span class="sc">$</span>GDPPC, </span>
@@ -3390,11 +3390,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <section id="cluster-and-outlier-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="cluster-and-outlier-analysis">Cluster and Outlier Analysis</h2>
 <p>Local Indicators of Spatial Association or LISA are statistics that evaluate the existence of clusters in the spatial arrangement of a given variable. For instance if we are studying cancer rates among census tracts in a given city local clusters in the rates mean that there are areas that have higher or lower rates than is to be expected by chance alone; that is, the values occurring are above or below those of a random distribution in space.</p>
-<p>In this section, we will learn how to apply appropriate Local Indicators for Spatial Association (LISA), especially local Moran'I to detect cluster and/or outlier from GDP per capita 2012 of Hunan Province, PRC.</p>
+<p>In this section, we will learn how to apply appropriate Local Indicators for Spatial Association (LISA), especially local Moran’I to detect cluster and/or outlier from GDP per capita 2012 of Hunan Province, PRC.</p>
 <section id="compute-local-morans-i" class="level3">
 <h3 class="anchored" data-anchor-id="compute-local-morans-i">Compute Local Moran’s I</h3>
-<p>To compute local Moran's I, the <a href="https://r-spatial.github.io/spdep/reference/localmoran.html"><em>localmoran()</em></a> function of <strong>spdep</strong> will be used. It computes <em>Ii</em> values, given a set of <em>zi</em> values and a listw object providing neighbour weighting information for the polygon associated with the zi values.</p>
-<p>The code chunks below are used to compute local Moran's I of <em>GDPPC2012</em> at the county level.</p>
+<p>To compute local Moran’s I, the <a href="https://r-spatial.github.io/spdep/reference/localmoran.html"><em>localmoran()</em></a> function of <strong>spdep</strong> will be used. It computes <em>Ii</em> values, given a set of <em>zi</em> values and a listw object providing neighbour weighting information for the polygon associated with the zi values.</p>
+<p>The code chunks below are used to compute local Moran’s I of <em>GDPPC2012</em> at the county level.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a>fips <span class="ot">&lt;-</span> <span class="fu">order</span>(hunan<span class="sc">$</span>County)</span>
 <span id="cb134-2"><a href="#cb134-2" aria-hidden="true" tabindex="-1"></a>localMI <span class="ot">&lt;-</span> <span class="fu">localmoran</span>(hunan<span class="sc">$</span>GDPPC, rswm_q)</span>
@@ -3411,7 +3411,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p><em>localmoran()</em> function returns a matrix of values whose columns are:</p>
 <ul>
-<li><p>Ii: the local Moran's I statistics</p></li>
+<li><p>Ii: the local Moran’s I statistics</p></li>
 <li><p>E.Ii: the expectation of local moran statistic under the randomisation hypothesis</p></li>
 <li><p>Var.Ii: the variance of local moran statistic under the randomisation hypothesis</p></li>
 <li><p>Z.Ii:the standard deviate of local moran statistic</p></li>
@@ -3518,14 +3518,14 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 </section>
 <section id="mapping-the-local-morans-i" class="level3">
 <h3 class="anchored" data-anchor-id="mapping-the-local-morans-i">Mapping the Local Moran’s I</h3>
-<p>Before mapping the local Moran's I map, it is wise to append the local Moran's I dataframe (i.e.&nbsp;localMI) onto hunan SpatialPolygonDataFrame. The code chunks below can be used to perform the task. The out SpatialPolygonDataFrame is called&nbsp;<em>hunan.localMI</em>.</p>
+<p>Before mapping the local Moran’s I map, it is wise to append the local Moran’s I dataframe (i.e.&nbsp;localMI) onto hunan SpatialPolygonDataFrame. The code chunks below can be used to perform the task. The out SpatialPolygonDataFrame is called&nbsp;<em>hunan.localMI</em>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>hunan.localMI <span class="ot">&lt;-</span> <span class="fu">cbind</span>(hunan,localMI) <span class="sc">%&gt;%</span></span>
 <span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Pr.Ii =</span> Pr.z....E.Ii..)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="mapping-local-morans-i-values" class="level4">
-<h4 class="anchored" data-anchor-id="mapping-local-morans-i-values">Mapping local Moran's I values</h4>
-<p>Using choropleth mapping functions of&nbsp;<strong>tmap</strong>&nbsp;package, we can plot the local Moran's I values by using the code chinks below.</p>
+<h4 class="anchored" data-anchor-id="mapping-local-morans-i-values">Mapping local Moran’s I values</h4>
+<p>Using choropleth mapping functions of&nbsp;<strong>tmap</strong>&nbsp;package, we can plot the local Moran’s I values by using the code chinks below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(hunan.localMI) <span class="sc">+</span></span>
 <span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"Ii"</span>, </span>
@@ -3539,9 +3539,9 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 </div>
 </section>
 <section id="mapping-local-morans-i-p-values" class="level4">
-<h4 class="anchored" data-anchor-id="mapping-local-morans-i-p-values">Mapping local Moran's I p-values</h4>
+<h4 class="anchored" data-anchor-id="mapping-local-morans-i-p-values">Mapping local Moran’s I p-values</h4>
 <p>The choropleth shows there is evidence for both positive and negative Ii values. However, it is useful to consider the p-values for each of these values, as consider above.</p>
-<p>The code chunks below produce a choropleth map of Moran's I p-values by using functions of <strong>tmap</strong> package.</p>
+<p>The code chunks below produce a choropleth map of Moran’s I p-values by using functions of <strong>tmap</strong> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb140"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(hunan.localMI) <span class="sc">+</span></span>
 <span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"Pr.Ii"</span>, </span>
@@ -3656,7 +3656,7 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>hunan<span class="sc">$</span>lag_GDPPC <span class="ot">&lt;-</span> <span class="fu">lag.listw</span>(rswm_q, hunan<span class="sc">$</span>GDPPC)</span>
 <span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a>DV <span class="ot">&lt;-</span> hunan<span class="sc">$</span>lag_GDPPC <span class="sc">-</span> <span class="fu">mean</span>(hunan<span class="sc">$</span>lag_GDPPC)     </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This is follow by centering the local Moran's around the mean.</p>
+<p>This is follow by centering the local Moran’s around the mean.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb147"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb147-1"><a href="#cb147-1" aria-hidden="true" tabindex="-1"></a>LM_I <span class="ot">&lt;-</span> localMI[,<span class="dv">1</span>] <span class="sc">-</span> <span class="fu">mean</span>(localMI[,<span class="dv">1</span>])    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -3664,12 +3664,12 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <div class="cell">
 <div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>signif <span class="ot">&lt;-</span> <span class="fl">0.05</span>       </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>These four command lines define the low-low (1), low-high (2), high-low (3) and high-high (4) categories.</p>
+<p>These four command lines define the (1) low-low, (2) high-low (3), low-high and (4) high-high categories.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb149-3"><a href="#cb149-3" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">3</span>  </span>
-<span id="cb149-4"><a href="#cb149-4" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">4</span>      </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="co">#low-low</span></span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="co">#high-low</span></span>
+<span id="cb149-3"><a href="#cb149-3" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&lt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&lt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">3</span> <span class="co">#low-high </span></span>
+<span id="cb149-4"><a href="#cb149-4" aria-hidden="true" tabindex="-1"></a>quadrant[DV <span class="sc">&gt;</span><span class="dv">0</span> <span class="sc">&amp;</span> LM_I<span class="sc">&gt;</span><span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">4</span> <span class="co">#high-high</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Lastly, places non-significant Moran in the category 0.</p>
 <div class="cell">
@@ -3709,7 +3709,7 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <p><img src="handsonex2_files/figure-html/unnamed-chunk-100-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>For effective interpretation, it is better to plot both the local Moran's I values map and its corresponding p-values map next to each other.</p>
+<p>For effective interpretation, it is better to plot both the local Moran’s I values map and its corresponding p-values map next to each other.</p>
 <p>The code chunk below will be used to create such visualisation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb153"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a>gdppc <span class="ot">&lt;-</span> <span class="fu">qtm</span>(hunan, <span class="st">"GDPPC"</span>)</span>
@@ -3734,7 +3734,7 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <p><img src="handsonex2_files/figure-html/unnamed-chunk-101-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>We can also include the local Moran's I map and p-value map as shown below for easy comparison.</p>
+<p>We can also include the local Moran’s I map and p-value map as shown below for easy comparison.</p>
 <p><img src="Moran p and i value.png" class="img-fluid"></p>
 <p><strong>Interpretation</strong></p>
 <ul>
@@ -3746,10 +3746,10 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <section id="hot-spot-and-cold-spot-area-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="hot-spot-and-cold-spot-area-analysis"><strong>Hot Spot and Cold Spot Area Analysis</strong></h2>
 <p>Beside detecting cluster and outliers, localised spatial statistics can be also used to detect hot spot and/or cold spot areas.</p>
-<p>The term 'hot spot' has been used generically across disciplines to describe a region or value that is higher relative to its surroundings (Lepers et al 2005, Aben et al 2012, Isobe et al 2015).</p>
+<p>The term ‘hot spot’ has been used generically across disciplines to describe a region or value that is higher relative to its surroundings (Lepers et al 2005, Aben et al 2012, Isobe et al 2015).</p>
 <section id="getis-and-ords-g-statistics" class="level3">
-<h3 class="anchored" data-anchor-id="getis-and-ords-g-statistics"><strong>Getis and Ord's G-Statistics</strong></h3>
-<p>An alternative spatial statistics to detect spatial anomalies is the Getis and Ord's G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values clutser spatially. Here, statistically significant hot-spots are recognised as areas of high values where other areas within a neighbourhood range also share high values too.</p>
+<h3 class="anchored" data-anchor-id="getis-and-ords-g-statistics"><strong>Getis and Ord’s G-Statistics</strong></h3>
+<p>An alternative spatial statistics to detect spatial anomalies is the Getis and Ord’s G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values clutser spatially. Here, statistically significant hot-spots are recognised as areas of high values where other areas within a neighbourhood range also share high values too.</p>
 <p>The analysis consists of three steps:</p>
 <ul>
 <li><p>Deriving spatial weight matrix</p></li>
@@ -3971,7 +3971,7 @@ attr(,"class")
 [1] "localG"</code></pre>
 </div>
 </div>
-<p>The output of localG() is a vector of G or Gstar values, with attributes "gstari" set to TRUE or FALSE, "call" set to the function call, and class "localG".</p>
+<p>The output of localG() is a vector of G or Gstar values, with attributes “gstari” set to TRUE or FALSE, “call” set to the function call, and class “localG”.</p>
 <p>The Gi statistics is represented as a Z-score. Greater values represent a greater intensity of clustering and the direction (positive or negative) indicates high or low clusters.</p>
 <p>Next, we will join the Gi values to their corresponding hunan sf data frame by using the code chunk below.</p>
 <div class="cell">
