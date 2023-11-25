@@ -223,7 +223,7 @@ We will prepare a base map and a choropleth map showing the distribution of GDPP
 
 ```{r}
 
-tm_shape(hunan_GDPPC) +
+Hunan_GDPPCmap <- tm_shape(hunan_GDPPC) +
   tm_fill(col = "GDPPC", 
           style = "pretty",
           palette="Blues", 
@@ -231,9 +231,11 @@ tm_shape(hunan_GDPPC) +
           
   tm_text("County", size = 0.2, col = "black") +        
   tm_borders(alpha = 0.5)
+
+tmap_arrange(Hunan_GDPPCmap)
 ```
 
-# Deriving Contiguity Spatial Weights  
+# Global Measures of Spatial Association 
 
 sfdep utilizes list objects for both neighbors and weights. The neighbors and weights lists.
 
@@ -241,9 +243,56 @@ To identify contiguity-based neighbors, we use [`st_contiguity()`](https://sfdep
 
 These lists can be created line by line or within a pipe. The most common usecase is likely via a dplyr pipeline.
 
-## Creating Neighbours and Weights 
+## **Identifying contiguity neighbours: Queen\'s method**
 
-Doing row-standardised weigh matrix:
+In the code chunk below [`st_contiguity()`](https://sfdep.josiahparry.com/reference/st_contiguity.html) is used to derive a contiguity neighbour list by using Queen\'s method.
+
+```{r}
+nb_queen <- hunan_GDPPC %>% 
+  mutate(nb = st_contiguity(geometry),
+         .before = 1)
+```
+
+> By default, queen argument is **TRUE**. If you do not specify *queen = FALSE*, this function will return a list of first order neighbours by using the Queen criteria. Rooks method will be used to identify the first order neighbour if queen = FALSE is used.
+
+The code chunk below is used to print the summary of the first lag neighbour list (i.e. nb) .
+
+```{r}
+summary(nb_queen$nb)
+```
+
+The summary report above shows that there are 88 area units in Hunan province. The most connected area unit has 11 neighbours. There are two are units with only one neighbour.
+
+To view the content of the data table, you can either display the output data frame on RStudio data viewer or by printing out the first ten records by using the code chunk below.
+
+```{r}
+kable(head(nb_queen,
+           n=10))
+```
+
+## **Identify contiguity neighbours: Rooks\' method**
+
+```{r}
+nb_rook <- hunan_GDPPC %>% 
+  mutate(nb = st_contiguity(geometry,
+                            queen = FALSE),
+         .before = 1)
+```
+
+## **Identifying higher order neighbors**
+
+There are times that we need to identify high order contiguity neighbours. To accomplish the task, [`st_nb_lag_cumul()`](https://sfdep.josiahparry.com/reference/st_nb_lag_cumul.html) should be used as shown in the code chunk below.
+
+```{r}
+nb2_queen <-  hunan_GDPPC %>% 
+  mutate(nb = st_contiguity(geometry),
+         nb2 = st_nb_lag_cumul(nb, 2),
+         .before = 1)
+
+nb2_queen
+```
+
+## Deriving contiguity weights: Queen Method
 
 ```{r}
 
@@ -260,7 +309,122 @@ B is the basic binary coding, **W is row standardised** (sums over all links to 
 
 If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row `t(rep(0, length=length(neighbours))) %*% x`, for arbitraty numerical vector `x` of length `length(neighbours)`. The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.
 
-# Calculating LISA
+## Distance-based Weights
+
+There are three popularly used distance-based spatial weights, they are:
+
+-   fixed distance weights,
+
+-   adaptive distance weights, and
+
+-   inverse distance weights (IDW).
+
+### Deriving fixed distance weights
+
+Before we can derive the fixed distance weights, we need to determine the upper limit for distance band by using the steps below:
+
+```{r}
+geo <- sf::st_geometry(hunan_GDPPC)
+nb <- st_knn(geo, longlat = TRUE)
+dists <- unlist(st_nb_dists(geo, nb))
+```
+
+-   [`st_nb_dists()`](https://sfdep.josiahparry.com/reference/st_nb_dists.html) of sfdep is used to calculate the nearest neighbour distance. The output is a list of distances for each observation\'s neighbors list.
+
+-   [`unlist()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unlist) of Base R is then used to return the output as a vector so that the summary statistics of the nearest neighbour distances can be derived.
+
+Now, we will go ahead to derive summary statistics of the nearest neighbour distances vector (i.e. dists) by usign the coced chunk below.
+
+```{r}
+summary (dists)
+```
+
+The summary statistics report above shows that the maximum nearest neighbour distance is 65.80km. By using a threshold value of 66km will ensure that each area will have at least one neighbour.
+
+Now we will go ahead to compute the fixed distance weights by using the code chunk below.
+
+```{r}
+wm_fd <- hunan_GDPPC %>%
+  mutate(nb = st_dist_band(geometry,
+                           upper = 66),
+               wt = st_weights(nb),
+               .before = 1)
+```
+
+### Deriving Adaptive Distance Weights
+
+```{r}
+wm_ad <- hunan_GDPPC %>% 
+  mutate(nb = st_knn(geometry,
+                     k=8),
+         wt = st_weights(nb),
+               .before = 1)
+```
+
+-   [`st_knn()`](https://sfdep.josiahparry.com/reference/st_knn.html) of sfdep is used to identify neighbors based on k (i.e. k = 8 indicates the nearest eight neighbours). The output is a list of neighbours (i.e. nb).
+
+-   [`st_weights()`](https://sfdep.josiahparry.com/reference/st_weights.html) is then used to calculate polygon spatial weights of the nb list. Note that:
+
+    -   the default `style` argument is set to \"W\" for row standardized weights, and
+
+    -   the default `allow_zero` is set to TRUE, assigns zero as lagged value to zone without neighbors.
+
+### Derive Inverse Distance Weights
+
+```{r}
+wm_idw <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wts = st_inverse_distance(nb, geometry,
+                                   scale = 1,
+                                   alpha = 1),
+         .before = 1)
+```
+
+-   [`st_contiguity()`](https://sfdep.josiahparry.com/reference/st_contiguity.html) of sfdep is used to identify the neighbours by using contiguity criteria. The output is a list of neighbours (i.e. nb).
+
+-   [`st_inverse_distance()`](https://sfdep.josiahparry.com/reference/st_inverse_distance.html) is then used to calculate inverse distance weights of neighbours on the nb list.
+
+## Computing Global Moran's I
+
+In the code chunk below, global_moran() function is used to compute the Moran\'s I value. Different from spdep package, the output is a tibble data.frame.
+
+```{r}
+moranI <- global_moran(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+glimpse(moranI)
+```
+
+## Performing Global Moran's I test 
+
+In general, Moran\'s I test will be performed instead of just computing the Moran\'s I statistics. With sfdep package, Moran\'s I test can be performed by using [`global_moran_test()`](https://sfdep.josiahparry.com/reference/global_moran_test.html) as shown in the code chunk below.
+
+```{r}
+global_moran_test(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+```
+
+### **Performing Global Moran\'I permutation test**
+
+In practice, monte carlo simulation should be used to perform the statistical test. For **sfdep**, it is supported by [`globel_moran_perm()`](https://sfdep.josiahparry.com/reference/global_moran_perm.html)
+
+It is always a good practice to use `set.seed()` before performing simulation. This is to ensure that the computation is reproducible.
+
+```{r}
+set.seed(1234)
+
+global_moran_perm(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt,
+                  nsim = 99)
+```
+
+> The numbers of simulation is alway equal to nsim + 1. This mean in nsim = 99. This mean 100 simulation will be performed.
+
+# **Local Measures of Spatial Association - sfdep methods**
+
+## Using sfdep - calculate LISA 
 
 To calculate LISAs we typically will provide a numeric object(s), a neighbor list, and a weights list--and often the argument `nsim` to determine the number of simulations to run. Most LISAs return a data frame of the same number of rows as the input dataframe. The resultant data frame can be unnested, or columns hoisted for ease of analysis.
 
@@ -277,18 +441,59 @@ lisa <- wm_q %>%
 #unnest to create individual columns 
 ```
 
-Visualize this by converting insignificant values to NA. This uses a cutoff of 0.1.
+The output of `local_moran()` is a sf data.frame containing the columns ii, eii, var_ii, z_ii, p_ii, p_ii_sim, and p_folded_sim.
 
-To have the four quadrants regions.
+-   ii: local moran statistic
+
+-   eii: expectation of local moran statistic; for localmoran_permthe permutation sample means
+
+-   var_ii: variance of local moran statistic; for localmoran_permthe permutation sample standard deviations
+
+-   z_ii: standard deviate of local moran statistic; for localmoran_perm based on permutation sample means and standard deviations p_ii: p-value of local moran statistic using pnorm(); for localmoran_perm using standard deviatse based on permutation sample means and standard deviations p_ii_sim: For `localmoran_perm()`, `rank()` and `punif()` of observed statistic rank for \[0, 1\] p-values using `alternative=` -p_folded_sim: the simulation folded \[0, 0.5\] range ranked p-value (based on https://github.com/pysal/esda/blob/4a63e0b5df1e754b17b5f1205b cadcbecc5e061/esda/crand.py#L211-L213)
+
+-   skewness: For `localmoran_perm`, the output of e1071::skewness() for the permutation samples underlying the standard deviates
+
+-   kurtosis: For `localmoran_perm`, the output of e1071::kurtosis() for the permutation samples underlying the standard deviates.
+
+## Visualising LISA 
+
+### Visualising local Moran's I and p-value 
 
 ```{r}
-lisa %>% 
-  mutate(pysal = ifelse(p_folded_sim <= 0.1, as.character(pysal), NA)) |> 
-  ggplot(aes(fill = pysal)) +
-  geom_sf() +
-  geom_sf(lwd = 0.2, color = "black") +
-  theme_void() +
-  scale_fill_manual(values = c("#1C4769", "#24975E", "#EACA97", "#B20016"))
+tmap_mode("plot")
+
+map1<- tm_shape(lisa) +
+  tm_fill("ii") + 
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(main.title = "local Moran's I of GDPPC",
+            main.title.size = 0.8)
+
+map2 <- tm_shape(lisa) +
+  tm_fill("p_ii_sim") + 
+  tm_borders(alpha = 0.5) +
+   tm_layout(main.title = "p-value of local Moran's I",
+            main.title.size = 0.8)
+
+tmap_arrange(map1, map2, ncol = 2)
+```
+
+### Visualising LISA map
+
+LISA map is a categorical map showing outliers and clusters. There are two types of outliers namely: High-Low and Low-High outliers. Likewise, there are two type of clusters namely: High-High and Low-Low cluaters. In fact, LISA map is an interpreted map by combining local Moran\'s I of geographical areas and their respective p-values.
+
+In lisa sf data.frame, we can find three fields contain the LISA categories. They are *mean*, *median* and *pysal*. In general, **classification in *mean*** will be used as shown in the code chunk below.
+
+```{r}
+lisa_sig <- lisa  %>%
+  filter(p_ii < 0.05)
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+tm_shape(lisa_sig) +
+  tm_fill("mean") + 
+  tm_borders(alpha = 0.4)
 ```
 
 # Time-Series - ESHA 
@@ -313,6 +518,12 @@ GDPPC <- read_csv("data/aspatial/Hunan_GDPPC.csv")
 
 ## Creating a Time Series Cube - Space Time Cube 
 
+Before getting started, students must read this [article](https://sfdep.josiahparry.com/articles/spacetime-s3.html) to learn the basic concept of spatio-temporal cube and its implementation in sfdep package.
+
+In the code chunk below, [`spacetime()`](https://sfdep.josiahparry.com/reference/spacetime.html) of sfdep is used to create an spacetime cube.
+
+Next, `is_spacetime_cube()` of sfdep package will be used to varify if GDPPC_st is indeed an space-time cube object.
+
 ```{r}
 
 hunan_spt <- spacetime(GDPPC, hunan,
@@ -324,6 +535,16 @@ is_spacetime_cube(hunan_spt)
 
 ## Computing GI\* 
 
+### Deriving the Spatial Weights
+
+-   `activate()` of dplyr package is used to activate the geometry context
+
+-   `mutate()` of dplyr package is used to create two new columns *nb* and *wt*.
+
+-   Then we will activate the data context again and copy over the nb and wt columns to each time-slice using `set_nbs()` and `set_wts()`
+
+    -   row order is very important so do not rearrange the observations after using `set_nbs()` or `set_wts()`.
+
 ```{r}
 
 GDPPC_nb <- hunan_spt %>% 
@@ -334,26 +555,28 @@ GDPPC_nb <- hunan_spt %>%
   set_wts("wt")
 ```
 
+We can use these new columns to manually calculate the local Gi\* for each location. We can do this by grouping by *Year* and using `local_gstar_perm()` of sfdep package. After which, we `use unnest()` to unnest *gi_star* column of the newly created *gi_starts* data.frame.
+
 ```{r}
 gi_stars <- GDPPC_nb %>% 
-  group_by("Year") %>%
+  group_by(Year) %>%
   mutate(gi_star = local_gstar_perm(GDPPC, nb, wt)) %>% 
   tidyr::unnest(gi_star)
 ```
 
 ## Mandall Kendell Test
 
-Select data from specific year
+With these Gi\* measures we can then evaluate each location for a trend using the Mann-Kendall test. The code chunk below uses Changsha county.
 
 ```{r}
 
 cbg <- gi_stars |> 
   ungroup() |> 
   filter(County == "Changsha") |> 
-  select(County, "Year", gi_star)
+  select(County, Year, gi_star)
 ```
 
-Plot
+Plot - graph:
 
 ```{r}
 
@@ -362,9 +585,54 @@ ggplot(cbg, aes(Year, gi_star)) +
   theme_light()
 ```
 
+### Plotting using an interactive plot 
+
+Using plotly package:
+
+```{r}
+
+p <- ggplot(data = cbg, 
+       aes(x = Year, 
+           y = gi_star)) +
+  geom_line() +
+  theme_light()
+
+ggplotly(p)
+```
+
+```{r}
+cbg %>%
+  summarise(mk = list(
+    unclass(
+      Kendall::MannKendall(gi_star)))) %>% 
+  tidyr::unnest_wider(mk)
+```
+
+In the above result, sl is the p-value. This result tells us that there is a slight upward but insignificant trend.
+
+We can replicate this for each location by using `group_by()` of dplyr package.
+
+```{r}
+ehsa <- gi_stars %>%
+  group_by(County) %>%
+  summarise(mk = list(
+    unclass(
+      Kendall::MannKendall(gi_star)))) %>%
+  tidyr::unnest_wider(mk)
+```
+
+Arranging to show significant hot/cold spots.
+
+```{r}
+
+emerging <- ehsa %>% 
+  arrange(sl, abs(tau)) %>% 
+  slice(1:10)
+```
+
 ## EHSA 
 
-While we can do the calculations manually as above, this is limited in two ways. Primarily that in the above example we used spatial neighbors only. Whereas in EHSA we can---and likely should---incorporate the time-lag of our spatial neighbors. Secondly, there are classifications proposed by ESRI which help us understand how each location is changing over time. Both of these are handled by the [`emerging_hotspot_analysis()`](https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis) function.
+In EHSA we can---and likely should---incorporate the time-lag of our spatial neighbors. Secondly, there are classifications proposed by ESRI which help us understand how each location is changing over time. Both of these are handled by the [`emerging_hotspot_analysis()`](https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis) function.
 
 This [`emerging_hotspot_analysis()`](https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis) takes a spacetime object `x`, and the quoted name of the variable of interested in `.var` at minimum. We can specify the number of time lags using the argument `k` which is set to 1 by default.
 
@@ -380,4 +648,44 @@ ehsa <- emerging_hotspot_analysis(
 
 ```{r}
 count(ehsa, classification)
+```
+
+We can plot to reveal the distribution instead.
+
+```{r}
+ggplot(data = ehsa,
+       aes(x = classification)) +
+  geom_bar()
+```
+
+![](EHSA Patterns.png)
+
+![](EHSA Patterns coldspots.png)
+
+### Visualising EHSA Data
+
+To visualised the EHSA data - we need to join it with the geospatial data.
+
+```{r}
+hunan_ehsa <- hunan %>%
+  left_join(ehsa,
+            by = join_by(County == location))
+```
+
+Then, we can use the tmap function to plot.
+
+```{r}
+ehsa_sig <- hunan_ehsa %>%
+  filter(p_value < 0.05)
+
+tmap_mode("plot")
+
+tm_shape(hunan_ehsa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  tm_shape(ehsa_sig) +
+  tm_fill("classification") + 
+  tm_borders(alpha = 0.4)
+
+
 ```

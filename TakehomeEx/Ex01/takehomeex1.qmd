@@ -1,0 +1,14 @@
+---
+title: "Take Home Ex 1"
+
+date: "25 Nov 23"
+date-modified: "last-modified" 
+
+format: html
+execute: 
+  echo: true
+  eval: true
+  warning: false
+  
+editor: visual 
+---

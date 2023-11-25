@@ -94,6 +94,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="../../site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="../../site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="../../site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="../../site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="../../site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="../../site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="../../site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="../../site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -191,19 +199,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#joining-the-data" id="toc-joining-the-data" class="nav-link" data-scroll-target="#joining-the-data">Joining the Data</a></li>
   <li><a href="#visualising-the-data---gdppc" id="toc-visualising-the-data---gdppc" class="nav-link" data-scroll-target="#visualising-the-data---gdppc">Visualising the Data - GDPPC</a></li>
   </ul></li>
-  <li><a href="#deriving-contiguity-spatial-weights" id="toc-deriving-contiguity-spatial-weights" class="nav-link" data-scroll-target="#deriving-contiguity-spatial-weights">Deriving Contiguity Spatial Weights</a>
+  <li><a href="#global-measures-of-spatial-association" id="toc-global-measures-of-spatial-association" class="nav-link" data-scroll-target="#global-measures-of-spatial-association">Global Measures of Spatial Association</a>
   <ul class="collapse">
-  <li><a href="#creating-neighbours-and-weights" id="toc-creating-neighbours-and-weights" class="nav-link" data-scroll-target="#creating-neighbours-and-weights">Creating Neighbours and Weights</a></li>
+  <li><a href="#identifying-contiguity-neighbours-queens-method" id="toc-identifying-contiguity-neighbours-queens-method" class="nav-link" data-scroll-target="#identifying-contiguity-neighbours-queens-method"><strong>Identifying contiguity neighbours: Queen's method</strong></a></li>
+  <li><a href="#identify-contiguity-neighbours-rooks-method" id="toc-identify-contiguity-neighbours-rooks-method" class="nav-link" data-scroll-target="#identify-contiguity-neighbours-rooks-method"><strong>Identify contiguity neighbours: Rooks' method</strong></a></li>
+  <li><a href="#identifying-higher-order-neighbors" id="toc-identifying-higher-order-neighbors" class="nav-link" data-scroll-target="#identifying-higher-order-neighbors"><strong>Identifying higher order neighbors</strong></a></li>
+  <li><a href="#deriving-contiguity-weights-queen-method" id="toc-deriving-contiguity-weights-queen-method" class="nav-link" data-scroll-target="#deriving-contiguity-weights-queen-method">Deriving contiguity weights: Queen Method</a></li>
+  <li><a href="#distance-based-weights" id="toc-distance-based-weights" class="nav-link" data-scroll-target="#distance-based-weights">Distance-based Weights</a>
+  <ul class="collapse">
+  <li><a href="#deriving-fixed-distance-weights" id="toc-deriving-fixed-distance-weights" class="nav-link" data-scroll-target="#deriving-fixed-distance-weights">Deriving fixed distance weights</a></li>
+  <li><a href="#deriving-adaptive-distance-weights" id="toc-deriving-adaptive-distance-weights" class="nav-link" data-scroll-target="#deriving-adaptive-distance-weights">Deriving Adaptive Distance Weights</a></li>
+  <li><a href="#derive-inverse-distance-weights" id="toc-derive-inverse-distance-weights" class="nav-link" data-scroll-target="#derive-inverse-distance-weights">Derive Inverse Distance Weights</a></li>
   </ul></li>
-  <li><a href="#calculating-lisa" id="toc-calculating-lisa" class="nav-link" data-scroll-target="#calculating-lisa">Calculating LISA</a></li>
+  <li><a href="#computing-global-morans-i" id="toc-computing-global-morans-i" class="nav-link" data-scroll-target="#computing-global-morans-i">Computing Global Moran’s I</a></li>
+  <li><a href="#performing-global-morans-i-test" id="toc-performing-global-morans-i-test" class="nav-link" data-scroll-target="#performing-global-morans-i-test">Performing Global Moran’s I test</a>
+  <ul class="collapse">
+  <li><a href="#performing-global-morani-permutation-test" id="toc-performing-global-morani-permutation-test" class="nav-link" data-scroll-target="#performing-global-morani-permutation-test"><strong>Performing Global Moran'I permutation test</strong></a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#local-measures-of-spatial-association---sfdep-methods" id="toc-local-measures-of-spatial-association---sfdep-methods" class="nav-link" data-scroll-target="#local-measures-of-spatial-association---sfdep-methods"><strong>Local Measures of Spatial Association - sfdep methods</strong></a>
+  <ul class="collapse">
+  <li><a href="#using-sfdep---calculate-lisa" id="toc-using-sfdep---calculate-lisa" class="nav-link" data-scroll-target="#using-sfdep---calculate-lisa">Using sfdep - calculate LISA</a></li>
+  <li><a href="#visualising-lisa" id="toc-visualising-lisa" class="nav-link" data-scroll-target="#visualising-lisa">Visualising LISA</a>
+  <ul class="collapse">
+  <li><a href="#visualising-local-morans-i-and-p-value" id="toc-visualising-local-morans-i-and-p-value" class="nav-link" data-scroll-target="#visualising-local-morans-i-and-p-value">Visualising local Moran’s I and p-value</a></li>
+  <li><a href="#visualising-lisa-map" id="toc-visualising-lisa-map" class="nav-link" data-scroll-target="#visualising-lisa-map">Visualising LISA map</a></li>
+  </ul></li>
+  </ul></li>
   <li><a href="#time-series---esha" id="toc-time-series---esha" class="nav-link" data-scroll-target="#time-series---esha">Time-Series - ESHA</a>
   <ul class="collapse">
   <li><a href="#import-the-packages" id="toc-import-the-packages" class="nav-link" data-scroll-target="#import-the-packages">Import the packages</a></li>
   <li><a href="#import-the-time-series-data" id="toc-import-the-time-series-data" class="nav-link" data-scroll-target="#import-the-time-series-data">Import the Time Series Data</a></li>
   <li><a href="#creating-a-time-series-cube---space-time-cube" id="toc-creating-a-time-series-cube---space-time-cube" class="nav-link" data-scroll-target="#creating-a-time-series-cube---space-time-cube">Creating a Time Series Cube - Space Time Cube</a></li>
-  <li><a href="#computing-gi" id="toc-computing-gi" class="nav-link" data-scroll-target="#computing-gi">Computing GI*</a></li>
-  <li><a href="#mandall-kendell-test" id="toc-mandall-kendell-test" class="nav-link" data-scroll-target="#mandall-kendell-test">Mandall Kendell Test</a></li>
-  <li><a href="#ehsa" id="toc-ehsa" class="nav-link" data-scroll-target="#ehsa">EHSA</a></li>
+  <li><a href="#computing-gi" id="toc-computing-gi" class="nav-link" data-scroll-target="#computing-gi">Computing GI*</a>
+  <ul class="collapse">
+  <li><a href="#deriving-the-spatial-weights" id="toc-deriving-the-spatial-weights" class="nav-link" data-scroll-target="#deriving-the-spatial-weights">Deriving the Spatial Weights</a></li>
+  </ul></li>
+  <li><a href="#mandall-kendell-test" id="toc-mandall-kendell-test" class="nav-link" data-scroll-target="#mandall-kendell-test">Mandall Kendell Test</a>
+  <ul class="collapse">
+  <li><a href="#plotting-using-an-interactive-plot" id="toc-plotting-using-an-interactive-plot" class="nav-link" data-scroll-target="#plotting-using-an-interactive-plot">Plotting using an interactive plot</a></li>
+  </ul></li>
+  <li><a href="#ehsa" id="toc-ehsa" class="nav-link" data-scroll-target="#ehsa">EHSA</a>
+  <ul class="collapse">
+  <li><a href="#visualising-ehsa-data" id="toc-visualising-ehsa-data" class="nav-link" data-scroll-target="#visualising-ehsa-data">Visualising EHSA Data</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -421,67 +460,486 @@ Geodetic CRS:  WGS 84</code></pre>
 <h2 class="anchored" data-anchor-id="visualising-the-data---gdppc">Visualising the Data - GDPPC</h2>
 <p>We will prepare a base map and a choropleth map showing the distribution of GDPPC 2012.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(hunan_GDPPC) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Hunan_GDPPCmap <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(hunan_GDPPC) <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"GDPPC"</span>, </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"pretty"</span>,</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette=</span><span class="st">"Blues"</span>, </span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"GDPPC"</span>) <span class="sc">+</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>          </span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_text</span>(<span class="st">"County"</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">"black"</span>) <span class="sc">+</span>        </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(Hunan_GDPPCmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <p><img src="inclass_ex02_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
 </section>
-<section id="deriving-contiguity-spatial-weights" class="level1">
-<h1>Deriving Contiguity Spatial Weights</h1>
+<section id="global-measures-of-spatial-association" class="level1">
+<h1>Global Measures of Spatial Association</h1>
 <p>sfdep utilizes list objects for both neighbors and weights. The neighbors and weights lists.</p>
 <p>To identify contiguity-based neighbors, we use <a href="https://sfdep.josiahparry.com/reference/st_contiguity"><code>st_contiguity()</code></a> on the sf geometry column. And to calculate the weights from the neighbors list, we use <a href="https://sfdep.josiahparry.com/reference/st_weights"><code>st_weights()</code></a> on the resultant neighbors list. By convention these are typically called <code>nb</code> and <code>wt</code>.</p>
 <p>These lists can be created line by line or within a pipe. The most common usecase is likely via a dplyr pipeline.</p>
-<section id="creating-neighbours-and-weights" class="level2">
-<h2 class="anchored" data-anchor-id="creating-neighbours-and-weights">Creating Neighbours and Weights</h2>
-<p>Doing row-standardised weigh matrix:</p>
+<section id="identifying-contiguity-neighbours-queens-method" class="level2">
+<h2 class="anchored" data-anchor-id="identifying-contiguity-neighbours-queens-method"><strong>Identifying contiguity neighbours: Queen's method</strong></h2>
+<p>In the code chunk below&nbsp;<a href="https://sfdep.josiahparry.com/reference/st_contiguity.html"><code>st_contiguity()</code></a>&nbsp;is used to derive a contiguity neighbour list by using Queen's method.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nb_queen <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">style=</span><span class="st">"W"</span>),</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="co"># to put them in the front</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<blockquote class="blockquote">
+<p>By default, queen argument is&nbsp;<strong>TRUE</strong>. If you do not specify&nbsp;<em>queen = FALSE</em>, this function will return a list of first order neighbours by using the Queen criteria. Rooks method will be used to identify the first order neighbour if queen = FALSE is used.</p>
+</blockquote>
+<p>The code chunk below is used to print the summary of the first lag neighbour list (i.e.&nbsp;nb) .</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(nb_queen<span class="sc">$</span>nb)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Neighbour list object:
+Number of regions: 88 
+Number of nonzero links: 448 
+Percentage nonzero weights: 5.785124 
+Average number of links: 5.090909 
+Link number distribution:
+
+ 1  2  3  4  5  6  7  8  9 11 
+ 2  2 12 16 24 14 11  4  2  1 
+2 least connected regions:
+30 65 with 1 link
+1 most connected region:
+85 with 11 links</code></pre>
+</div>
+</div>
+<p>The summary report above shows that there are 88 area units in Hunan province. The most connected area unit has 11 neighbours. There are two are units with only one neighbour.</p>
+<p>To view the content of the data table, you can either display the output data frame on RStudio data viewer or by printing out the first ten records by using the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(nb_queen,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">n=</span><span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 7%">
+<col style="width: 5%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 8%">
+<col style="width: 5%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">nb</th>
+<th style="text-align: left;">NAME_2</th>
+<th style="text-align: right;">ID_3</th>
+<th style="text-align: left;">NAME_3</th>
+<th style="text-align: left;">ENGTYPE_3</th>
+<th style="text-align: left;">County</th>
+<th style="text-align: right;">GDPPC</th>
+<th style="text-align: left;">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2, 3, 4, 57, 85</td>
+<td style="text-align: left;">Changde</td>
+<td style="text-align: right;">21098</td>
+<td style="text-align: left;">Anxiang</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Anxiang</td>
+<td style="text-align: right;">23667</td>
+<td style="text-align: left;">POLYGON ((112.0625 29.75523…</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1, 57, 58, 78, 85</td>
+<td style="text-align: left;">Changde</td>
+<td style="text-align: right;">21100</td>
+<td style="text-align: left;">Hanshou</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Hanshou</td>
+<td style="text-align: right;">20981</td>
+<td style="text-align: left;">POLYGON ((112.2288 29.11684…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1, 4, 5, 85</td>
+<td style="text-align: left;">Changde</td>
+<td style="text-align: right;">21101</td>
+<td style="text-align: left;">Jinshi</td>
+<td style="text-align: left;">County City</td>
+<td style="text-align: left;">Jinshi</td>
+<td style="text-align: right;">34592</td>
+<td style="text-align: left;">POLYGON ((111.8927 29.6013,…</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">1, 3, 5, 6</td>
+<td style="text-align: left;">Changde</td>
+<td style="text-align: right;">21102</td>
+<td style="text-align: left;">Li</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Li</td>
+<td style="text-align: right;">24473</td>
+<td style="text-align: left;">POLYGON ((111.3731 29.94649…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3, 4, 6, 85</td>
+<td style="text-align: left;">Changde</td>
+<td style="text-align: right;">21103</td>
+<td style="text-align: left;">Linli</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Linli</td>
+<td style="text-align: right;">25554</td>
+<td style="text-align: left;">POLYGON ((111.6324 29.76288…</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4, 5, 69, 75, 85</td>
+<td style="text-align: left;">Changde</td>
+<td style="text-align: right;">21104</td>
+<td style="text-align: left;">Shimen</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Shimen</td>
+<td style="text-align: right;">27137</td>
+<td style="text-align: left;">POLYGON ((110.8825 30.11675…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">67, 71, 74, 84</td>
+<td style="text-align: left;">Changsha</td>
+<td style="text-align: right;">21109</td>
+<td style="text-align: left;">Liuyang</td>
+<td style="text-align: left;">County City</td>
+<td style="text-align: left;">Liuyang</td>
+<td style="text-align: right;">63118</td>
+<td style="text-align: left;">POLYGON ((113.9905 28.5682,…</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">9, 46, 47, 56, 78, 80, 86</td>
+<td style="text-align: left;">Changsha</td>
+<td style="text-align: right;">21110</td>
+<td style="text-align: left;">Ningxiang</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Ningxiang</td>
+<td style="text-align: right;">62202</td>
+<td style="text-align: left;">POLYGON ((112.7181 28.38299…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">8, 66, 68, 78, 84, 86</td>
+<td style="text-align: left;">Changsha</td>
+<td style="text-align: right;">21111</td>
+<td style="text-align: left;">Wangcheng</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Wangcheng</td>
+<td style="text-align: right;">70666</td>
+<td style="text-align: left;">POLYGON ((112.7914 28.52688…</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">16, 17, 19, 20, 22, 70, 72, 73</td>
+<td style="text-align: left;">Chenzhou</td>
+<td style="text-align: right;">21112</td>
+<td style="text-align: left;">Anren</td>
+<td style="text-align: left;">County</td>
+<td style="text-align: left;">Anren</td>
+<td style="text-align: right;">12761</td>
+<td style="text-align: left;">POLYGON ((113.1757 26.82734…</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="identify-contiguity-neighbours-rooks-method" class="level2">
+<h2 class="anchored" data-anchor-id="identify-contiguity-neighbours-rooks-method"><strong>Identify contiguity neighbours: Rooks' method</strong></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>nb_rook <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">queen =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="identifying-higher-order-neighbors" class="level2">
+<h2 class="anchored" data-anchor-id="identifying-higher-order-neighbors"><strong>Identifying higher order neighbors</strong></h2>
+<p>There are times that we need to identify high order contiguity neighbours. To accomplish the task,&nbsp;<a href="https://sfdep.josiahparry.com/reference/st_nb_lag_cumul.html"><code>st_nb_lag_cumul()</code></a>&nbsp;should be used as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nb2_queen <span class="ot">&lt;-</span>  hunan_GDPPC <span class="sc">%&gt;%</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">nb2 =</span> <span class="fu">st_nb_lag_cumul</span>(nb, <span class="dv">2</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>nb2_queen</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 88 features and 8 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812
+Geodetic CRS:  WGS 84
+First 10 features:
+                               nb
+1                 2, 3, 4, 57, 85
+2               1, 57, 58, 78, 85
+3                     1, 4, 5, 85
+4                      1, 3, 5, 6
+5                     3, 4, 6, 85
+6                4, 5, 69, 75, 85
+7                  67, 71, 74, 84
+8       9, 46, 47, 56, 78, 80, 86
+9           8, 66, 68, 78, 84, 86
+10 16, 17, 19, 20, 22, 70, 72, 73
+                                                                                        nb2
+1                                     2, 3, 4, 5, 6, 32, 56, 57, 58, 64, 69, 75, 76, 78, 85
+2                           1, 3, 4, 5, 6, 8, 9, 32, 56, 57, 58, 64, 68, 69, 75, 76, 78, 85
+3                                                 1, 2, 4, 5, 6, 32, 56, 57, 69, 75, 78, 85
+4                                                             1, 2, 3, 5, 6, 57, 69, 75, 85
+5                                                 1, 2, 3, 4, 6, 32, 56, 57, 69, 75, 78, 85
+6                                         1, 2, 3, 4, 5, 32, 53, 55, 56, 57, 69, 75, 78, 85
+7                                                     9, 19, 66, 67, 71, 73, 74, 76, 84, 86
+8  2, 9, 19, 21, 31, 32, 34, 35, 36, 41, 45, 46, 47, 56, 58, 66, 68, 74, 78, 80, 84, 85, 86
+9               2, 7, 8, 19, 21, 35, 46, 47, 56, 58, 66, 67, 68, 74, 76, 78, 80, 84, 85, 86
+10               11, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 70, 71, 72, 73, 74, 82, 83, 86
+     NAME_2  ID_3    NAME_3   ENGTYPE_3    County GDPPC
+1   Changde 21098   Anxiang      County   Anxiang 23667
+2   Changde 21100   Hanshou      County   Hanshou 20981
+3   Changde 21101    Jinshi County City    Jinshi 34592
+4   Changde 21102        Li      County        Li 24473
+5   Changde 21103     Linli      County     Linli 25554
+6   Changde 21104    Shimen      County    Shimen 27137
+7  Changsha 21109   Liuyang County City   Liuyang 63118
+8  Changsha 21110 Ningxiang      County Ningxiang 62202
+9  Changsha 21111 Wangcheng      County Wangcheng 70666
+10 Chenzhou 21112     Anren      County     Anren 12761
+                         geometry
+1  POLYGON ((112.0625 29.75523...
+2  POLYGON ((112.2288 29.11684...
+3  POLYGON ((111.8927 29.6013,...
+4  POLYGON ((111.3731 29.94649...
+5  POLYGON ((111.6324 29.76288...
+6  POLYGON ((110.8825 30.11675...
+7  POLYGON ((113.9905 28.5682,...
+8  POLYGON ((112.7181 28.38299...
+9  POLYGON ((112.7914 28.52688...
+10 POLYGON ((113.1757 26.82734...</code></pre>
+</div>
+</div>
+</section>
+<section id="deriving-contiguity-weights-queen-method" class="level2">
+<h2 class="anchored" data-anchor-id="deriving-contiguity-weights-queen-method">Deriving contiguity weights: Queen Method</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">style=</span><span class="st">"W"</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="co"># to put them in the front</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Starting from a binary neighbours list, in which regions are either listed as neighbours or are absent (thus not in the set of neighbours for some definition), the function adds a weights list with values given by the coding scheme style chosen:</p>
 <p>B is the basic binary coding, <strong>W is row standardised</strong> (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al.&nbsp;1999, p.&nbsp;167-168 (sums over all links to n).</p>
 <p>If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row <code>t(rep(0, length=length(neighbours))) %*% x</code>, for arbitraty numerical vector <code>x</code> of length <code>length(neighbours)</code>. The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.</p>
 </section>
+<section id="distance-based-weights" class="level2">
+<h2 class="anchored" data-anchor-id="distance-based-weights">Distance-based Weights</h2>
+<p>There are three popularly used distance-based spatial weights, they are:</p>
+<ul>
+<li><p>fixed distance weights,</p></li>
+<li><p>adaptive distance weights, and</p></li>
+<li><p>inverse distance weights (IDW).</p></li>
+</ul>
+<section id="deriving-fixed-distance-weights" class="level3">
+<h3 class="anchored" data-anchor-id="deriving-fixed-distance-weights">Deriving fixed distance weights</h3>
+<p>Before we can derive the fixed distance weights, we need to determine the upper limit for distance band by using the steps below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>geo <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_geometry</span>(hunan_GDPPC)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>nb <span class="ot">&lt;-</span> <span class="fu">st_knn</span>(geo, <span class="at">longlat =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>dists <span class="ot">&lt;-</span> <span class="fu">unlist</span>(<span class="fu">st_nb_dists</span>(geo, nb))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p><a href="https://sfdep.josiahparry.com/reference/st_nb_dists.html"><code>st_nb_dists()</code></a> of sfdep is used to calculate the nearest neighbour distance. The output is a list of distances for each observation's neighbors list.</p></li>
+<li><p><a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unlist"><code>unlist()</code></a> of Base R is then used to return the output as a vector so that the summary statistics of the nearest neighbour distances can be derived.</p></li>
+</ul>
+<p>Now, we will go ahead to derive summary statistics of the nearest neighbour distances vector (i.e.&nbsp;dists) by usign the coced chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span> (dists)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  21.56   29.11   36.89   37.34   43.21   65.80 </code></pre>
+</div>
+</div>
+<p>The summary statistics report above shows that the maximum nearest neighbour distance is 65.80km. By using a threshold value of 66km will ensure that each area will have at least one neighbour.</p>
+<p>Now we will go ahead to compute the fixed distance weights by using the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>wm_fd <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_dist_band</span>(geometry,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">upper =</span> <span class="dv">66</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">wt =</span> <span class="fu">st_weights</span>(nb),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="calculating-lisa" class="level1">
-<h1>Calculating LISA</h1>
+<section id="deriving-adaptive-distance-weights" class="level3">
+<h3 class="anchored" data-anchor-id="deriving-adaptive-distance-weights">Deriving Adaptive Distance Weights</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>wm_ad <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_knn</span>(geometry,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">k=</span><span class="dv">8</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb),</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p><a href="https://sfdep.josiahparry.com/reference/st_knn.html"><code>st_knn()</code></a> of sfdep is used to identify neighbors based on k (i.e.&nbsp;k = 8 indicates the nearest eight neighbours). The output is a list of neighbours (i.e.&nbsp;nb).</p></li>
+<li><p><a href="https://sfdep.josiahparry.com/reference/st_weights.html"><code>st_weights()</code></a> is then used to calculate polygon spatial weights of the nb list. Note that:</p>
+<ul>
+<li><p>the default <code>style</code> argument is set to "W" for row standardized weights, and</p></li>
+<li><p>the default <code>allow_zero</code> is set to TRUE, assigns zero as lagged value to zone without neighbors.</p></li>
+</ul></li>
+</ul>
+</section>
+<section id="derive-inverse-distance-weights" class="level3">
+<h3 class="anchored" data-anchor-id="derive-inverse-distance-weights">Derive Inverse Distance Weights</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>wm_idw <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">wts =</span> <span class="fu">st_inverse_distance</span>(nb, geometry,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">scale =</span> <span class="dv">1</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">alpha =</span> <span class="dv">1</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p><a href="https://sfdep.josiahparry.com/reference/st_contiguity.html"><code>st_contiguity()</code></a> of sfdep is used to identify the neighbours by using contiguity criteria. The output is a list of neighbours (i.e.&nbsp;nb).</p></li>
+<li><p><a href="https://sfdep.josiahparry.com/reference/st_inverse_distance.html"><code>st_inverse_distance()</code></a> is then used to calculate inverse distance weights of neighbours on the nb list.</p></li>
+</ul>
+</section>
+</section>
+<section id="computing-global-morans-i" class="level2">
+<h2 class="anchored" data-anchor-id="computing-global-morans-i">Computing Global Moran’s I</h2>
+<p>In the code chunk below, global_moran() function is used to compute the Moran's I value. Different from spdep package, the output is a tibble data.frame.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>moranI <span class="ot">&lt;-</span> <span class="fu">global_moran</span>(wm_q<span class="sc">$</span>GDPPC,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                       wm_q<span class="sc">$</span>nb,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                       wm_q<span class="sc">$</span>wt)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(moranI)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 2
+ $ I: num 0.301
+ $ K: num 7.64</code></pre>
+</div>
+</div>
+</section>
+<section id="performing-global-morans-i-test" class="level2">
+<h2 class="anchored" data-anchor-id="performing-global-morans-i-test">Performing Global Moran’s I test</h2>
+<p>In general, Moran's I test will be performed instead of just computing the Moran's I statistics. With sfdep package, Moran's I test can be performed by using&nbsp;<a href="https://sfdep.josiahparry.com/reference/global_moran_test.html"><code>global_moran_test()</code></a>&nbsp;as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">global_moran_test</span>(wm_q<span class="sc">$</span>GDPPC,</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>                       wm_q<span class="sc">$</span>nb,</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                       wm_q<span class="sc">$</span>wt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Moran I test under randomisation
+
+data:  x  
+weights: listw    
+
+Moran I statistic standard deviate = 4.7351, p-value = 1.095e-06
+alternative hypothesis: greater
+sample estimates:
+Moran I statistic       Expectation          Variance 
+      0.300749970      -0.011494253       0.004348351 </code></pre>
+</div>
+</div>
+<section id="performing-global-morani-permutation-test" class="level3">
+<h3 class="anchored" data-anchor-id="performing-global-morani-permutation-test"><strong>Performing Global Moran'I permutation test</strong></h3>
+<p>In practice, monte carlo simulation should be used to perform the statistical test. For <strong>sfdep</strong>, it is supported by <a href="https://sfdep.josiahparry.com/reference/global_moran_perm.html"><code>globel_moran_perm()</code></a></p>
+<p>It is always a good practice to use <code>set.seed()</code> before performing simulation. This is to ensure that the computation is reproducible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">global_moran_perm</span>(wm_q<span class="sc">$</span>GDPPC,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                       wm_q<span class="sc">$</span>nb,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                       wm_q<span class="sc">$</span>wt,</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">nsim =</span> <span class="dv">99</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Monte-Carlo simulation of Moran I
+
+data:  x 
+weights: listw  
+number of simulations + 1: 100 
+
+statistic = 0.30075, observed rank = 100, p-value &lt; 2.2e-16
+alternative hypothesis: two.sided</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>The numbers of simulation is alway equal to nsim + 1. This mean in nsim = 99. This mean 100 simulation will be performed.</p>
+</blockquote>
+</section>
+</section>
+</section>
+<section id="local-measures-of-spatial-association---sfdep-methods" class="level1">
+<h1><strong>Local Measures of Spatial Association - sfdep methods</strong></h1>
+<section id="using-sfdep---calculate-lisa" class="level2">
+<h2 class="anchored" data-anchor-id="using-sfdep---calculate-lisa">Using sfdep - calculate LISA</h2>
 <p>To calculate LISAs we typically will provide a numeric object(s), a neighbor list, and a weights list–and often the argument <code>nsim</code> to determine the number of simulations to run. Most LISAs return a data frame of the same number of rows as the input dataframe. The resultant data frame can be unnested, or columns hoisted for ease of analysis.</p>
 <p>For example to calculate the Local Moran we use the function <a href="https://sfdep.josiahparry.com/reference/local_moran"><code>local_moran()</code></a></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lisa <span class="ot">&lt;-</span> wm_q <span class="sc">%&gt;%</span> </span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">local_moran =</span> <span class="fu">local_moran</span>(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    GDPPC, nb, wt, <span class="at">nsim =</span> <span class="dv">999</span>),</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(local_moran) </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#unnest to create individual columns </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lisa <span class="ot">&lt;-</span> wm_q <span class="sc">%&gt;%</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">local_moran =</span> <span class="fu">local_moran</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    GDPPC, nb, wt, <span class="at">nsim =</span> <span class="dv">999</span>),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(local_moran) </span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">#unnest to create individual columns </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Visualize this by converting insignificant values to NA. This uses a cutoff of 0.1.</p>
-<p>To have the four quadrants regions.</p>
+<p>The output of <code>local_moran()</code> is a sf data.frame containing the columns ii, eii, var_ii, z_ii, p_ii, p_ii_sim, and p_folded_sim.</p>
+<ul>
+<li><p>ii: local moran statistic</p></li>
+<li><p>eii: expectation of local moran statistic; for localmoran_permthe permutation sample means</p></li>
+<li><p>var_ii: variance of local moran statistic; for localmoran_permthe permutation sample standard deviations</p></li>
+<li><p>z_ii: standard deviate of local moran statistic; for localmoran_perm based on permutation sample means and standard deviations p_ii: p-value of local moran statistic using pnorm(); for localmoran_perm using standard deviatse based on permutation sample means and standard deviations p_ii_sim: For <code>localmoran_perm()</code>, <code>rank()</code> and <code>punif()</code> of observed statistic rank for [0, 1] p-values using <code>alternative=</code> -p_folded_sim: the simulation folded [0, 0.5] range ranked p-value (based on https://github.com/pysal/esda/blob/4a63e0b5df1e754b17b5f1205b cadcbecc5e061/esda/crand.py#L211-L213)</p></li>
+<li><p>skewness: For <code>localmoran_perm</code>, the output of e1071::skewness() for the permutation samples underlying the standard deviates</p></li>
+<li><p>kurtosis: For <code>localmoran_perm</code>, the output of e1071::kurtosis() for the permutation samples underlying the standard deviates.</p></li>
+</ul>
+</section>
+<section id="visualising-lisa" class="level2">
+<h2 class="anchored" data-anchor-id="visualising-lisa">Visualising LISA</h2>
+<section id="visualising-local-morans-i-and-p-value" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-local-morans-i-and-p-value">Visualising local Moran’s I and p-value</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lisa <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pysal =</span> <span class="fu">ifelse</span>(p_folded_sim <span class="sc">&lt;=</span> <span class="fl">0.1</span>, <span class="fu">as.character</span>(pysal), <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pysal)) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">lwd =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#1C4769"</span>, <span class="st">"#24975E"</span>, <span class="st">"#EACA97"</span>, <span class="st">"#B20016"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>map1<span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(lisa) <span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"ii"</span>) <span class="sc">+</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_view</span>(<span class="at">set.zoom.limits =</span> <span class="fu">c</span>(<span class="dv">6</span>,<span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"local Moran's I of GDPPC"</span>,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>map2 <span class="ot">&lt;-</span> <span class="fu">tm_shape</span>(lisa) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"p_ii_sim"</span>) <span class="sc">+</span> </span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>   <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"p-value of local Moran's I"</span>,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="fl">0.8</span>)</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_arrange</span>(map1, map2, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+</section>
+<section id="visualising-lisa-map" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-lisa-map">Visualising LISA map</h3>
+<p>LISA map is a categorical map showing outliers and clusters. There are two types of outliers namely: High-Low and Low-High outliers. Likewise, there are two type of clusters namely: High-High and Low-Low cluaters. In fact, LISA map is an interpreted map by combining local Moran's I of geographical areas and their respective p-values.</p>
+<p>In lisa sf data.frame, we can find three fields contain the LISA categories. They are <em>mean</em>, <em>median</em> and <em>pysal</em>. In general, <strong>classification in <em>mean</em></strong> will be used as shown in the code chunk below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>lisa_sig <span class="ot">&lt;-</span> lisa  <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p_ii <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(lisa) <span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(lisa_sig) <span class="sc">+</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"mean"</span>) <span class="sc">+</span> </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
 </section>
 <section id="time-series---esha" class="level1">
 <h1>Time-Series - ESHA</h1>
@@ -489,7 +947,7 @@ Geodetic CRS:  WGS 84</code></pre>
 <h2 class="anchored" data-anchor-id="import-the-packages">Import the packages</h2>
 <p>plotly - makes the graph interactive - useful for time series.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, sfdep, tmap, tidyverse, knitr, plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, sfdep, tmap, tidyverse, knitr, plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="import-the-time-series-data" class="level2">
@@ -497,17 +955,20 @@ Geodetic CRS:  WGS 84</code></pre>
 <p>Hunan_GDPPC by years - comprising data of the GDPPC in 2005, 2006 and 2007 by the County.</p>
 <p>The time data field must be in <strong>Integers</strong> and not character.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>GDPPC <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_GDPPC.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>GDPPC <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_GDPPC.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="creating-a-time-series-cube---space-time-cube" class="level2">
 <h2 class="anchored" data-anchor-id="creating-a-time-series-cube---space-time-cube">Creating a Time Series Cube - Space Time Cube</h2>
+<p>Before getting started, students must read this <a href="https://sfdep.josiahparry.com/articles/spacetime-s3.html">article</a> to learn the basic concept of spatio-temporal cube and its implementation in sfdep package.</p>
+<p>In the code chunk below, <a href="https://sfdep.josiahparry.com/reference/spacetime.html"><code>spacetime()</code></a> of sfdep is used to create an spacetime cube.</p>
+<p>Next,&nbsp;<code>is_spacetime_cube()</code>&nbsp;of sfdep package will be used to varify if GDPPC_st is indeed an space-time cube object.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hunan_spt <span class="ot">&lt;-</span> <span class="fu">spacetime</span>(GDPPC, hunan,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">.loc_col =</span> <span class="st">"County"</span>, </span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">.time_col =</span> <span class="st">"Year"</span>) </span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">is_spacetime_cube</span>(hunan_spt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>hunan_spt <span class="ot">&lt;-</span> <span class="fu">spacetime</span>(GDPPC, hunan,</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">.loc_col =</span> <span class="st">"County"</span>, </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">.time_col =</span> <span class="st">"Year"</span>) </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">is_spacetime_cube</span>(hunan_spt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
 </div>
@@ -515,67 +976,163 @@ Geodetic CRS:  WGS 84</code></pre>
 </section>
 <section id="computing-gi" class="level2">
 <h2 class="anchored" data-anchor-id="computing-gi">Computing GI*</h2>
+<section id="deriving-the-spatial-weights" class="level3">
+<h3 class="anchored" data-anchor-id="deriving-the-spatial-weights">Deriving the Spatial Weights</h3>
+<ul>
+<li><p><code>activate()</code> of dplyr package is used to activate the geometry context</p></li>
+<li><p><code>mutate()</code> of dplyr package is used to create two new columns <em>nb</em> and <em>wt</em>.</p></li>
+<li><p>Then we will activate the data context again and copy over the nb and wt columns to each time-slice using <code>set_nbs()</code> and <code>set_wts()</code></p>
+<ul>
+<li>row order is very important so do not rearrange the observations after using <code>set_nbs()</code> or <code>set_wts()</code>.</li>
+</ul></li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>GDPPC_nb <span class="ot">&lt;-</span> hunan_spt <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(<span class="st">"geometry"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">include_self</span>(<span class="fu">st_contiguity</span>(geometry)),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb), <span class="at">scale =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>  </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_nbs</span>(<span class="st">"nb"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_wts</span>(<span class="st">"wt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>GDPPC_nb <span class="ot">&lt;-</span> hunan_spt <span class="sc">%&gt;%</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(<span class="st">"geometry"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">include_self</span>(<span class="fu">st_contiguity</span>(geometry)),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb), <span class="at">scale =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>  </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_nbs</span>(<span class="st">"nb"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_wts</span>(<span class="st">"wt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>We can use these new columns to manually calculate the local Gi* for each location. We can do this by grouping by&nbsp;<em>Year</em>&nbsp;and using&nbsp;<code>local_gstar_perm()</code>&nbsp;of sfdep package. After which, we&nbsp;<code>use unnest()</code>&nbsp;to unnest&nbsp;<em>gi_star</em>&nbsp;column of the newly created&nbsp;<em>gi_starts</em>&nbsp;data.frame.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gi_stars <span class="ot">&lt;-</span> GDPPC_nb <span class="sc">%&gt;%</span> </span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">"Year"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gi_star =</span> <span class="fu">local_gstar_perm</span>(GDPPC, nb, wt)) <span class="sc">%&gt;%</span> </span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>gi_stars <span class="ot">&lt;-</span> GDPPC_nb <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Year) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gi_star =</span> <span class="fu">local_gstar_perm</span>(GDPPC, nb, wt)) <span class="sc">%&gt;%</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
 </section>
 <section id="mandall-kendell-test" class="level2">
 <h2 class="anchored" data-anchor-id="mandall-kendell-test">Mandall Kendell Test</h2>
-<p>Select data from specific year</p>
+<p>With these Gi* measures we can then evaluate each location for a trend using the Mann-Kendall test. The code chunk below uses Changsha county.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cbg <span class="ot">&lt;-</span> gi_stars <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(County <span class="sc">==</span> <span class="st">"Changsha"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(County, <span class="st">"Year"</span>, gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>cbg <span class="ot">&lt;-</span> gi_stars <span class="sc">|&gt;</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(County <span class="sc">==</span> <span class="st">"Changsha"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(County, Year, gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Plot</p>
+<p>Plot - graph:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cbg, <span class="fu">aes</span>(Year, gi_star)) <span class="sc">+</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cbg, <span class="fu">aes</span>(Year, gi_star)) <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<section id="plotting-using-an-interactive-plot" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-using-an-interactive-plot">Plotting using an interactive plot</h3>
+<p>Using plotly package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> cbg, </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> Year, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> gi_star)) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplotly</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-949644c54044ed07b7fc" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-949644c54044ed07b7fc">{"x":{"data":[{"x":[2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021],"y":[5.0282995066289,5.16920110797823,5.29588928929129,5.6039537096874,6.27888622460047,5.93574557629373,5.75087090542989,5.69424758301146,5.70850542370548,5.76081215617335,6.09712724125719,6.00365477796731,6.20280535403579,6.03718162027383,6.57943217188553,5.76691556641955,5.74865347941565],"text":["Year: 2005<br />gi_star: 5.028300","Year: 2006<br />gi_star: 5.169201","Year: 2007<br />gi_star: 5.295889","Year: 2008<br />gi_star: 5.603954","Year: 2009<br />gi_star: 6.278886","Year: 2010<br />gi_star: 5.935746","Year: 2011<br />gi_star: 5.750871","Year: 2012<br />gi_star: 5.694248","Year: 2013<br />gi_star: 5.708505","Year: 2014<br />gi_star: 5.760812","Year: 2015<br />gi_star: 6.097127","Year: 2016<br />gi_star: 6.003655","Year: 2017<br />gi_star: 6.202805","Year: 2018<br />gi_star: 6.037182","Year: 2019<br />gi_star: 6.579432","Year: 2020<br />gi_star: 5.766916","Year: 2021<br />gi_star: 5.748653"],"type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(0,0,0,1)","dash":"solid"},"hoveron":"points","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":26.2283105022831,"r":7.30593607305936,"b":40.1826484018265,"l":43.1050228310502},"plot_bgcolor":"rgba(255,255,255,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[2004.2,2021.8],"tickmode":"array","ticktext":["2005","2010","2015","2020"],"tickvals":[2005,2010,2015,2020],"categoryorder":"array","categoryarray":["2005","2010","2015","2020"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0.33208800332088,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088,"zeroline":false,"anchor":"y","title":{"text":"Year","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[4.95074287336607,6.65698880514836],"tickmode":"array","ticktext":["5.0","5.5","6.0","6.5"],"tickvals":[5,5.5,6,6.5],"categoryorder":"array","categoryarray":["5.0","5.5","6.0","6.5"],"nticks":null,"ticks":"outside","tickcolor":"rgba(179,179,179,1)","ticklen":3.65296803652968,"tickwidth":0.33208800332088,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(222,222,222,1)","gridwidth":0.33208800332088,"zeroline":false,"anchor":"x","title":{"text":"gi_star","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(179,179,179,1)","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":"rgba(255,255,255,1)","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"a582eec3d06":{"x":{},"y":{},"type":"scatter"}},"cur_data":"a582eec3d06","visdat":{"a582eec3d06":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>cbg <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mk =</span> <span class="fu">list</span>(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unclass</span>(</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>      Kendall<span class="sc">::</span><span class="fu">MannKendall</span>(gi_star)))) <span class="sc">%&gt;%</span> </span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(mk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 x 5
+    tau      sl     S     D  varS
+  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 0.485 0.00742    66  136.  589.</code></pre>
+</div>
+</div>
+<p>In the above result, sl is the p-value. This result tells us that there is a slight upward but insignificant trend.</p>
+<p>We can replicate this for each location by using <code>group_by()</code> of dplyr package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>ehsa <span class="ot">&lt;-</span> gi_stars <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(County) <span class="sc">%&gt;%</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mk =</span> <span class="fu">list</span>(</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">unclass</span>(</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>      Kendall<span class="sc">::</span><span class="fu">MannKendall</span>(gi_star)))) <span class="sc">%&gt;%</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest_wider</span>(mk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Arranging to show significant hot/cold spots.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>emerging <span class="ot">&lt;-</span> ehsa <span class="sc">%&gt;%</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(sl, <span class="fu">abs</span>(tau)) <span class="sc">%&gt;%</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 <section id="ehsa" class="level2">
 <h2 class="anchored" data-anchor-id="ehsa">EHSA</h2>
-<p>While we can do the calculations manually as above, this is limited in two ways. Primarily that in the above example we used spatial neighbors only. Whereas in EHSA we can—and likely should—incorporate the time-lag of our spatial neighbors. Secondly, there are classifications proposed by ESRI which help us understand how each location is changing over time. Both of these are handled by the <a href="https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis"><code>emerging_hotspot_analysis()</code></a> function.</p>
+<p>In EHSA we can—and likely should—incorporate the time-lag of our spatial neighbors. Secondly, there are classifications proposed by ESRI which help us understand how each location is changing over time. Both of these are handled by the <a href="https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis"><code>emerging_hotspot_analysis()</code></a> function.</p>
 <p>This <a href="https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis"><code>emerging_hotspot_analysis()</code></a> takes a spacetime object <code>x</code>, and the quoted name of the variable of interested in <code>.var</code> at minimum. We can specify the number of time lags using the argument <code>k</code> which is set to 1 by default.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ehsa <span class="ot">&lt;-</span> <span class="fu">emerging_hotspot_analysis</span>(</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> hunan_spt, </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.var =</span> <span class="st">"GDPPC"</span>, </span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> <span class="dv">1</span>, </span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nsim =</span> <span class="dv">99</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>ehsa <span class="ot">&lt;-</span> <span class="fu">emerging_hotspot_analysis</span>(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> hunan_spt, </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.var =</span> <span class="st">"GDPPC"</span>, </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> <span class="dv">1</span>, </span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nsim =</span> <span class="dv">99</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(ehsa, classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(ehsa, classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5 x 2
+<pre><code># A tibble: 6 x 2
   classification          n
   &lt;chr&gt;               &lt;int&gt;
-1 no pattern detected     3
-2 oscilating coldspot     5
-3 oscilating hotspot     11
-4 sporadic coldspot      46
-5 sporadic hotspot       23</code></pre>
+1 consecutive hotspot     1
+2 no pattern detected     3
+3 oscilating coldspot     2
+4 oscilating hotspot     12
+5 sporadic coldspot      46
+6 sporadic hotspot       24</code></pre>
+</div>
+</div>
+<p>We can plot to reveal the distribution instead.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> ehsa,</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> classification)) <span class="sc">+</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p><img src="EHSA Patterns.png" class="img-fluid"></p>
+<p><img src="EHSA Patterns coldspots.png" class="img-fluid"></p>
+<section id="visualising-ehsa-data" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-ehsa-data">Visualising EHSA Data</h3>
+<p>To visualised the EHSA data - we need to join it with the geospatial data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>hunan_ehsa <span class="ot">&lt;-</span> hunan <span class="sc">%&gt;%</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(ehsa,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">join_by</span>(County <span class="sc">==</span> location))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, we can use the tmap function to plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ehsa_sig <span class="ot">&lt;-</span> hunan_ehsa <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p_value <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">"plot"</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(hunan_ehsa) <span class="sc">+</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(ehsa_sig) <span class="sc">+</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="st">"classification"</span>) <span class="sc">+</span> </span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 
 
+</section>
 </section>
 </section>
 
