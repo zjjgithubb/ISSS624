@@ -140,6 +140,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="../../InClassEx/Ex01/inclass_Ex01.html" rel="" target="">
  <span class="dropdown-text">In-Class Ex 01</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../InClassEx/Ex02/inclass_ex02.html" rel="" target="">
+ <span class="dropdown-text">In-Class Ex 02</span></a>
+  </li>  
     </ul>
   </li>
 </ul>
@@ -273,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 24, 2023</p>
+      <p class="date-modified">November 25, 2023</p>
     </div>
   </div>
     
@@ -311,6 +315,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>Geospatial Data: Hunan County Boundary Layer</p></li>
 <li><p>Aspatial Data: Hunan’s local development indicators in 2012. Hunan_2012.csv</p></li>
+<li><p>GDPPC stands for Gross Domestic Product Per Capita. It is a measure of the economic output of a country or region per person. This indicator is commonly used to assess the average economic performance or standard of living in a given area.</p></li>
+<li><p>GDP per capita is expressed in terms of a specific currency, such as dollars or euros, and it provides insight into the economic well-being of the average individual in a particular area. It is often used as an important economic indicator to compare the economic performance of different countries or regions and to analyze trends over time.</p></li>
+<li><p>High GDP per capita generally suggests a higher standard of living, better infrastructure, and more resources available per person. However, it’s important to note that GDP per capita alone does not capture the distribution of income within a population, and factors like income inequality should also be considered for a more comprehensive understanding of economic well-being.</p></li>
 </ul>
 </section>
 <section id="loading-the-packages" class="level2">
@@ -371,11 +378,14 @@ Geodetic CRS:  WGS 84</code></pre>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hunan <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hunan,hunan2012)<span class="sc">%&gt;%</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<ol type="1">
-<li><p><strong><code>left_join(hunan, hunan2012)</code></strong>: This line performs a left join between the data frames <strong><code>hunan</code></strong> and <strong><code>hunan2012</code></strong>. The left join includes all rows from the <strong><code>hunan</code></strong> data frame and the matching rows from the <strong><code>hunan2012</code></strong> data frame based on a common key or keys. The result is a data frame with columns from both data frames.</p></li>
-<li><p><strong><code>%&gt;%</code></strong>: The pipe operator (<strong><code>%&gt;%</code></strong>) is used to pass the result of the left join to the next operation.</p></li>
-<li><p><strong><code>select(1:4, 7, 15)</code></strong>: This line selects specific columns from the joined data frame. Columns 1 through 4, column 7, and column 15 are retained in the final data frame, and the rest are dropped.</p></li>
-</ol>
+<p>The <strong><code>select</code></strong> function is applied to the result of the <strong><code>left_join(hunan, hunan2012)</code></strong> operation. In other words, it is applied to the data frame that is the output of the left join.</p>
+<p>In the context of the left join:</p>
+<ul>
+<li><p>Columns 1 through 4 (<strong><code>1:4</code></strong>) refer to columns 1 through 4 from the result of the left join.</p></li>
+<li><p>Column 7 (<strong><code>7</code></strong>) refers to column 7 from the result of the left join.</p></li>
+<li><p>Column 15 (<strong><code>15</code></strong>) refers to column 15 from the result of the left join.</p></li>
+</ul>
+<p>Therefore, the columns selected by <strong><code>select</code></strong> are from the data frame that results from the left join operation. If there are columns with the same name in both <strong><code>hunan</code></strong> and <strong><code>hunan2012</code></strong> data frames, the column names will be disambiguated in the result, typically with suffixes like <strong><code>_x</code></strong> for the left data frame and <strong><code>_y</code></strong> for the right data frame.</p>
 </section>
 <section id="visualising-the-data---regional-development-indicator" class="level2">
 <h2 class="anchored" data-anchor-id="visualising-the-data---regional-development-indicator">Visualising the Data - Regional Development Indicator</h2>
@@ -3749,6 +3759,7 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <p>The term ‘hot spot’ has been used generically across disciplines to describe a region or value that is higher relative to its surroundings (Lepers et al 2005, Aben et al 2012, Isobe et al 2015).</p>
 <section id="getis-and-ords-g-statistics" class="level3">
 <h3 class="anchored" data-anchor-id="getis-and-ords-g-statistics"><strong>Getis and Ord’s G-Statistics</strong></h3>
+<p>Must be based on <strong>Distance Weights</strong> only!</p>
 <p>An alternative spatial statistics to detect spatial anomalies is the Getis and Ord’s G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values clutser spatially. Here, statistically significant hot-spots are recognised as areas of high values where other areas within a neighbourhood range also share high values too.</p>
 <p>The analysis consists of three steps:</p>
 <ul>
@@ -3761,6 +3772,11 @@ Zixing        -7.6849e-01 -8.8210e-02  9.4057e-01 -7.0144e-01         0.4830</co
 <li><p><strong>High Positive Z-Scores:</strong> Locations with high positive z-scores are hotspots. This means that the values at these locations are higher than expected and are surrounded by other locations with high values.</p></li>
 <li><p><strong>Low Negative Z-Scores:</strong> Locations with low negative z-scores are cold spots. This means that the values at these locations are lower than expected and are surrounded by other locations with low values.</p></li>
 <li><p><strong>Not Statistically Significant:</strong> If the z-score is not statistically significant, it suggests that the observed clustering is likely due to random chance, and there is no clear evidence of hotspots or cold spots.</p></li>
+</ul>
+<p><strong>Two parts:</strong></p>
+<ul>
+<li><p>Gi value - exclude itself</p></li>
+<li><p>Gstari - include itself</p></li>
 </ul>
 </section>
 <section id="deriving-spatial-weight-matrix" class="level3">

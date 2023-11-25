@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-11-25">
+
+<title>ISSS624 - inclass_Ex02</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">ISSS624</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-ex" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">Hands-On Ex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-ex">    
+        <li>
+    <a class="dropdown-item" href="../../HandsOnEx/HandsOnEx1/handson_ex1.html" rel="" target="">
+ <span class="dropdown-text">Hands-On Ex 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../HandsOnEx/HandsOnEx2/handsonex2.html" rel="" target="">
+ <span class="dropdown-text">Hands-On Ex 2</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-ex" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">In-Class Ex</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-ex">    
+        <li>
+    <a class="dropdown-item" href="../../InClassEx/Ex01/inclass_Ex01.html" rel="" target="">
+ <span class="dropdown-text">In-Class Ex 01</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../InClassEx/Ex02/inclass_ex02.html" rel="" target="">
+ <span class="dropdown-text">In-Class Ex 02</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html" rel="" target="">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-to-in-class-ex-02" id="toc-introduction-to-in-class-ex-02" class="nav-link active" data-scroll-target="#introduction-to-in-class-ex-02">Introduction to In Class Ex 02</a>
+  <ul class="collapse">
+  <li><a href="#spatial-randomness" id="toc-spatial-randomness" class="nav-link" data-scroll-target="#spatial-randomness">Spatial Randomness</a></li>
+  <li><a href="#spatial-inequality" id="toc-spatial-inequality" class="nav-link" data-scroll-target="#spatial-inequality">Spatial Inequality</a></li>
+  <li><a href="#spatial-weights" id="toc-spatial-weights" class="nav-link" data-scroll-target="#spatial-weights">Spatial Weights</a></li>
+  <li><a href="#lag" id="toc-lag" class="nav-link" data-scroll-target="#lag">Lag</a></li>
+  <li><a href="#toblers-first-law-of-geography" id="toc-toblers-first-law-of-geography" class="nav-link" data-scroll-target="#toblers-first-law-of-geography">Tobler’s First Law of Geography</a></li>
+  <li><a href="#time-series---emerging-hot-spot-analysis-ehsa" id="toc-time-series---emerging-hot-spot-analysis-ehsa" class="nav-link" data-scroll-target="#time-series---emerging-hot-spot-analysis-ehsa">Time Series - Emerging Hot Spot Analysis (EHSA)</a></li>
+  </ul></li>
+  <li><a href="#ex-for-in-class" id="toc-ex-for-in-class" class="nav-link" data-scroll-target="#ex-for-in-class">Ex for In Class</a>
+  <ul class="collapse">
+  <li><a href="#sfdep-package" id="toc-sfdep-package" class="nav-link" data-scroll-target="#sfdep-package">Sfdep Package</a></li>
+  <li><a href="#loading-the-packages" id="toc-loading-the-packages" class="nav-link" data-scroll-target="#loading-the-packages">Loading the Packages</a></li>
+  </ul></li>
+  <li><a href="#getting-the-data-ready" id="toc-getting-the-data-ready" class="nav-link" data-scroll-target="#getting-the-data-ready">Getting the data ready</a>
+  <ul class="collapse">
+  <li><a href="#joining-the-data" id="toc-joining-the-data" class="nav-link" data-scroll-target="#joining-the-data">Joining the Data</a></li>
+  <li><a href="#visualising-the-data---gdppc" id="toc-visualising-the-data---gdppc" class="nav-link" data-scroll-target="#visualising-the-data---gdppc">Visualising the Data - GDPPC</a></li>
+  </ul></li>
+  <li><a href="#deriving-contiguity-spatial-weights" id="toc-deriving-contiguity-spatial-weights" class="nav-link" data-scroll-target="#deriving-contiguity-spatial-weights">Deriving Contiguity Spatial Weights</a>
+  <ul class="collapse">
+  <li><a href="#creating-neighbours-and-weights" id="toc-creating-neighbours-and-weights" class="nav-link" data-scroll-target="#creating-neighbours-and-weights">Creating Neighbours and Weights</a></li>
+  </ul></li>
+  <li><a href="#calculating-lisa" id="toc-calculating-lisa" class="nav-link" data-scroll-target="#calculating-lisa">Calculating LISA</a></li>
+  <li><a href="#time-series---esha" id="toc-time-series---esha" class="nav-link" data-scroll-target="#time-series---esha">Time-Series - ESHA</a>
+  <ul class="collapse">
+  <li><a href="#import-the-packages" id="toc-import-the-packages" class="nav-link" data-scroll-target="#import-the-packages">Import the packages</a></li>
+  <li><a href="#import-the-time-series-data" id="toc-import-the-time-series-data" class="nav-link" data-scroll-target="#import-the-time-series-data">Import the Time Series Data</a></li>
+  <li><a href="#creating-a-time-series-cube---space-time-cube" id="toc-creating-a-time-series-cube---space-time-cube" class="nav-link" data-scroll-target="#creating-a-time-series-cube---space-time-cube">Creating a Time Series Cube - Space Time Cube</a></li>
+  <li><a href="#computing-gi" id="toc-computing-gi" class="nav-link" data-scroll-target="#computing-gi">Computing GI*</a></li>
+  <li><a href="#mandall-kendell-test" id="toc-mandall-kendell-test" class="nav-link" data-scroll-target="#mandall-kendell-test">Mandall Kendell Test</a></li>
+  <li><a href="#ehsa" id="toc-ehsa" class="nav-link" data-scroll-target="#ehsa">EHSA</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">inclass_Ex02</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 25, 2023</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">November 25, 2023</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction-to-in-class-ex-02" class="level1">
+<h1>Introduction to In Class Ex 02</h1>
+<section id="spatial-randomness" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-randomness">Spatial Randomness</h2>
+<p>Spatial randomness assumption in geospatial analysis - assuming that it is randomly distributed across areas.</p>
+<p>The assumption of spatial randomness states that the values of a variable at different locations in a spatial dataset are independent of each other, and there is no systematic spatial pattern or trend.</p>
+<p>Key aspects of the <strong>spatial randomness assumption</strong>:</p>
+<ol type="1">
+<li><p><strong>Independence of Observations:</strong> The assumption implies that the value of a variable at one location does not provide information about the values at neighboring locations. Each observation is considered to be independent of its spatial neighbors.</p></li>
+<li><p><strong>Homogeneity:</strong> The spatial randomness assumption assumes homogeneity or stationarity across the study area. This means that the statistical properties of the variable (mean, variance, etc.) do not vary systematically across space.</p></li>
+<li><p><strong>Random Spatial Distribution:</strong> There is no discernible pattern or structure in the spatial distribution of the variable. The distribution of values across space appears random and lacks systematic trends.</p></li>
+<li><p><strong>Isotropy:</strong> Isotropy refers to the idea that the spatial process is similar in all directions. In other words, the behavior of the variable is consistent regardless of the direction of measurement.</p></li>
+</ol>
+<p>It’s important to note that the spatial randomness assumption may not hold in many real-world situations. Spatial autocorrelation, where values at nearby locations are correlated, is a violation of spatial randomness. Detecting and understanding spatial patterns and dependencies is a common goal in spatial analysis.</p>
+<p>If spatial randomness is assumed, methods like global spatial autocorrelation tests (e.g., Moran’s I) and certain types of spatial regression models may be appropriate. However, when spatial patterns exist, additional spatial analysis techniques are needed to account for and model the spatial dependencies in the data.</p>
+</section>
+<section id="spatial-inequality" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-inequality">Spatial Inequality</h2>
+<p>Spatial inequality refers to the unequal distribution of resources, opportunities, wealth, or development across different geographic areas. This form of inequality is characterized by disparities in economic, social, and environmental conditions between regions, cities, or neighborhoods. Spatial inequality can manifest in various ways and impact people’s quality of life, access to services, and overall well-being. Here are some key aspects of spatial inequality:</p>
+<ol type="1">
+<li><p><strong>Economic Disparities:</strong></p>
+<ul>
+<li><strong>Income and Wealth:</strong> Spatial inequality often results in variations in income levels and wealth accumulation between different regions. Some areas may experience economic growth and prosperity, while others face economic decline and poverty.</li>
+</ul></li>
+<li><p><strong>Access to Services:</strong></p>
+<ul>
+<li><p><strong>Education:</strong> Disparities in the quality of education and educational resources between regions can lead to differences in opportunities and outcomes for residents.</p></li>
+<li><p><strong>Healthcare:</strong> Unequal access to healthcare facilities and services can contribute to health disparities between spatial areas.</p></li>
+<li><p><strong>Infrastructure:</strong> Disparities in infrastructure development, such as transportation, utilities, and communication networks, can affect the overall development and connectivity of regions.</p></li>
+</ul></li>
+<li><p><strong>Employment Opportunities:</strong></p>
+<ul>
+<li><strong>Job Markets:</strong> Variations in the availability of employment opportunities and industries can lead to uneven economic development and employment rates across regions.</li>
+</ul></li>
+<li><p><strong>Housing and Living Conditions:</strong></p>
+<ul>
+<li><p><strong>Housing Affordability:</strong> Spatial inequality may result in differences in housing costs and affordability, impacting the living conditions of residents.</p></li>
+<li><p><strong>Urban-Rural Divide:</strong> Disparities between urban and rural areas can contribute to spatial inequality, with urban areas often experiencing more significant economic development.</p></li>
+</ul></li>
+<li><p><strong>Social and Environmental Factors:</strong></p>
+<ul>
+<li><p><strong>Social Services:</strong> Access to social services, cultural amenities, and recreational facilities can vary between regions.</p></li>
+<li><p><strong>Environmental Justice:</strong> Spatial inequality may be associated with environmental disparities, such as unequal exposure to pollution or access to green spaces.</p></li>
+</ul></li>
+<li><p><strong>Policy and Governance:</strong></p>
+<ul>
+<li><strong>Government Policies:</strong> Historical and contemporary government policies can contribute to or alleviate spatial inequality. Policies related to taxation, infrastructure investment, and social programs can influence regional disparities.</li>
+</ul></li>
+</ol>
+<p>Addressing spatial inequality often requires targeted policies and interventions to promote more equitable development, improve access to opportunities, and enhance the well-being of residents in marginalized areas. Spatial planning, regional development strategies, and inclusive policies are crucial tools in mitigating spatial inequalities and fostering sustainable and balanced growth.</p>
+</section>
+<section id="spatial-weights" class="level2">
+<h2 class="anchored" data-anchor-id="spatial-weights">Spatial Weights</h2>
+<p>Spatial weights are a fundamental concept in spatial analysis and spatial statistics. They represent the spatial relationships between different locations or observations in a geographic space. Spatial weights are used to quantify the influence or connectivity between spatial units, and they play a crucial role in various spatial analysis techniques. Here are some key points about spatial weights:</p>
+<p>Typically two types - <strong>adjacency weight</strong> or based on <strong>distance</strong>.</p>
+<ol type="1">
+<li><p><strong>Definition:</strong></p>
+<ul>
+<li>Spatial weights define the degree of influence or proximity between pairs of spatial units. They create a matrix that captures the spatial relationships in a dataset.</li>
+</ul></li>
+<li><p><strong>Types of Spatial Weights:</strong></p>
+<ul>
+<li><p><strong>Binary / Adjacent Weights:</strong> Indicate whether spatial units are neighbors (1 for neighbors, 0 for non-neighbors). Can be based on whether adjacent or based on distance (e.g.&nbsp;within distance = 1)</p></li>
+<li><p><strong>Distance-Based Weights:</strong> Reflect the inverse of the distance between spatial units.</p></li>
+<li><p><strong>Contiguity Weights:</strong> Indicate whether spatial units share a common boundary or vertex.</p></li>
+</ul></li>
+<li><p><strong>Common Approaches to Define Spatial Weights:</strong></p>
+<ul>
+<li><p><strong>k-Nearest Neighbors (kNN):</strong> Assign weights based on the k nearest neighbors for each spatial unit.</p></li>
+<li><p><strong>Distance Bands:</strong> Assign weights based on a threshold distance, considering units within the specified distance as neighbors.</p></li>
+<li><p><strong>Queen’s Contiguity:</strong> Assign weights of 1 to units that share a common boundary or vertex.</p></li>
+<li><p><strong>Rook’s Contiguity:</strong> Similar to Queen’s, but considers only shared edges, not vertices.</p></li>
+</ul></li>
+<li><p><strong>Spatial Weights Matrices:</strong></p>
+<ul>
+<li>Spatial weights are often represented as matrices. A spatial weights matrix (W) is a square matrix where each element (Wij) represents the weight between spatial units i and j.</li>
+</ul></li>
+<li><p><strong>Applications:</strong></p>
+<ul>
+<li><p><strong>Spatial Autocorrelation:</strong> Used in measures like Moran’s I to assess the degree of spatial clustering or dispersion of values.</p></li>
+<li><p><strong>Spatial Regression:</strong> Applied in spatial econometrics to model spatial dependencies in regression analyses.</p></li>
+<li><p><strong>Spatial Interpolation:</strong> Utilized in methods like kriging for spatial prediction.</p></li>
+</ul></li>
+</ol>
+</section>
+<section id="lag" class="level2">
+<h2 class="anchored" data-anchor-id="lag">Lag</h2>
+<p>Lag 2 neighbours will cover both Lag 1 and Lag 2 neighbours.</p>
+</section>
+<section id="toblers-first-law-of-geography" class="level2">
+<h2 class="anchored" data-anchor-id="toblers-first-law-of-geography">Tobler’s First Law of Geography</h2>
+<p>Tobler’s First law of Geography Everything is related to everything else, but near things are more related than distant things.</p>
+<p>Two important concepts</p>
+<ul>
+<li><p>Spatial Dependency - trying to find oil? where to dig? by using calculations</p></li>
+<li><p>Spatial Autocorrelation - whether there is cluster or not; reject the null hypothesis that there is spatial randomness - can be positive and negative autocorrelation</p>
+<ul>
+<li><p>Positive - you see lumps, clusters (high-high, low,-low)</p></li>
+<li><p>Negative - you see checker boxes, outliers (low-high, high-low)</p>
+<p><img src="Local Moran.png" class="img-fluid"></p></li>
+</ul></li>
+</ul>
+</section>
+<section id="time-series---emerging-hot-spot-analysis-ehsa" class="level2">
+<h2 class="anchored" data-anchor-id="time-series---emerging-hot-spot-analysis-ehsa">Time Series - Emerging Hot Spot Analysis (EHSA)</h2>
+<p><strong>Mann-Kendall Test</strong></p>
+<ul>
+<li><p>The Mann-Kendall statistical test for trend is used to assess whether a set of data values is increasing over time or decreasing over time, and whether the trend in either direction is statistically significant.</p></li>
+<li><p>It is a non-parametric test, which means it works for all distributions (i.e.&nbsp;your data doesn’t have to meet the assumption of normality), but your data should have no serial correlation. If your data does follow a normal distribution, you can run simple linear regression instead. Refer to <a href="https://www.statisticshowto.com/wp-content/uploads/2016/08/Mann-Kendall-Analysis-1.pdf">this article</a> for a full tutorial of how to perform Mann-Kendall test manually.</p></li>
+<li><p>Your data isn’t collected seasonally (e.g.&nbsp;only during the summer and winter months), because the test won’t work if alternating upward and downward trends exist in the data. Another test—the Seasonal Kendall Test—is generally used for seasonally collected data. Your data does not have any covariates—other factors that could influence your data other than the ones you’re plotting. You have only one data point per time period. If you have multiple points, use the median value.</p></li>
+</ul>
+<p><strong>ESHA</strong> - It combines the traditional ESDA technique of hot spot analysis using the <strong>Getis-Ord Gi* statistic with the traditional time-series Mann-Kendall test for monotonic trends</strong>. The goal of EHSA is to evaluate how hot and cold spots are changing over time. It helps us answer the questions: are they becoming increasingly hotter, are they cooling down, or are they staying the same?</p>
+<p><img src="spacetime cube.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="ex-for-in-class" class="level1">
+<h1>Ex for In Class</h1>
+<section id="sfdep-package" class="level2">
+<h2 class="anchored" data-anchor-id="sfdep-package">Sfdep Package</h2>
+<p>Focusing on <strong>sfdep</strong> - note that it is sf - a package built on spdep.</p>
+</section>
+<section id="loading-the-packages" class="level2">
+<h2 class="anchored" data-anchor-id="loading-the-packages">Loading the Packages</h2>
+<p>New package for this exercise - <strong>sfdep</strong></p>
+<p>sfdep builds on the great shoulders of spdep package for spatial dependence. sfdep creates an sf and tidyverse friendly interface to the package as well as introduces new functionality that is not present in spdep. sfdep utilizes list columns extensively to make this interface possible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, sfdep, tmap, tidyverse, knitr, readxl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="getting-the-data-ready" class="level1">
+<h1>Getting the data ready</h1>
+<p>First - we will import the data.</p>
+<p>We will start with the geospatial data - Hunan county, which is in ESRI shapefile format.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hunan <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>,                   </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">layer =</span> <span class="st">"Hunan"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `Hunan' from data source 
+  `C:\zjjgithubb\ISSS624\InClassEx\Ex02\data\geospatial' using driver `ESRI Shapefile'
+Simple feature collection with 88 features and 7 fields
+Geometry type: POLYGON
+Dimension:     XY
+Bounding box:  xmin: 108.7831 ymin: 24.6342 xmax: 114.2544 ymax: 30.12812
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+<p>Next, we will import the aspatial data using the readr package.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hunan2012 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_2012.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Hunan_GDP contains the GDP by County from 2004 to 2021.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>HunanGDP <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"data/aspatial/Hunan_GDP.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="joining-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="joining-the-data">Joining the Data</h2>
+<p>We will update the attribute table update the attribute table of&nbsp;<em>hunan</em>’s SpatialPolygonsDataFrame with the attribute fields of&nbsp;<em>hunan2012</em>&nbsp;dataframe. This is performed by using&nbsp;<em>left_join()</em>&nbsp;of&nbsp;<strong>dplyr</strong>&nbsp;package.</p>
+<p>Left join to retain the geospatial data (geometry data) - left hand side is hunan, and then i append the rest onto it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hunan_GDPPC <span class="ot">&lt;-</span> <span class="fu">left_join</span>(hunan, hunan2012) <span class="sc">%&gt;%</span>   </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">15</span>) </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#1:4 - Col 1 to 4 </span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#7 -  County</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#15 - GDPPC </span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Tidyverse - because its geospatial data, it will auto keep the geometry data - without the need to specify </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <strong><code>select</code></strong> function is applied to the result of the <strong><code>left_join(hunan, hunan2012)</code></strong> operation. In other words, it is applied to the data frame that is the output of the left join.</p>
+<p>In the context of the left join:</p>
+<ul>
+<li><p>Columns 1 through 4 (<strong><code>1:4</code></strong>) refer to columns 1 through 4 from the result of the left join.</p></li>
+<li><p>Column 7 (<strong><code>7</code></strong>) refers to column 7 from the result of the left join.</p></li>
+<li><p>Column 15 (<strong><code>15</code></strong>) refers to column 15 from the result of the left join.</p></li>
+</ul>
+<p>Therefore, the columns selected by <strong><code>select</code></strong> are from the data frame that results from the left join operation. If there are columns with the same name in both <strong><code>hunan</code></strong> and <strong><code>hunan2012</code></strong> data frames, the column names will be disambiguated in the result, typically with suffixes like <strong><code>_x</code></strong> for the left data frame and <strong><code>_y</code></strong> for the right data frame.</p>
+</section>
+<section id="visualising-the-data---gdppc" class="level2">
+<h2 class="anchored" data-anchor-id="visualising-the-data---gdppc">Visualising the Data - GDPPC</h2>
+<p>We will prepare a base map and a choropleth map showing the distribution of GDPPC 2012.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(hunan_GDPPC) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(<span class="at">col =</span> <span class="st">"GDPPC"</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">style =</span> <span class="st">"pretty"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">palette=</span><span class="st">"Blues"</span>, </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">title =</span> <span class="st">"GDPPC"</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_text</span>(<span class="st">"County"</span>, <span class="at">size =</span> <span class="fl">0.2</span>, <span class="at">col =</span> <span class="st">"black"</span>) <span class="sc">+</span>        </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+</section>
+<section id="deriving-contiguity-spatial-weights" class="level1">
+<h1>Deriving Contiguity Spatial Weights</h1>
+<p>sfdep utilizes list objects for both neighbors and weights. The neighbors and weights lists.</p>
+<p>To identify contiguity-based neighbors, we use <a href="https://sfdep.josiahparry.com/reference/st_contiguity"><code>st_contiguity()</code></a> on the sf geometry column. And to calculate the weights from the neighbors list, we use <a href="https://sfdep.josiahparry.com/reference/st_weights"><code>st_weights()</code></a> on the resultant neighbors list. By convention these are typically called <code>nb</code> and <code>wt</code>.</p>
+<p>These lists can be created line by line or within a pipe. The most common usecase is likely via a dplyr pipeline.</p>
+<section id="creating-neighbours-and-weights" class="level2">
+<h2 class="anchored" data-anchor-id="creating-neighbours-and-weights">Creating Neighbours and Weights</h2>
+<p>Doing row-standardised weigh matrix:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wm_q <span class="ot">&lt;-</span> hunan_GDPPC <span class="sc">%&gt;%</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">st_contiguity</span>(geometry),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">style=</span><span class="st">"W"</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="co"># to put them in the front</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Starting from a binary neighbours list, in which regions are either listed as neighbours or are absent (thus not in the set of neighbours for some definition), the function adds a weights list with values given by the coding scheme style chosen:</p>
+<p>B is the basic binary coding, <strong>W is row standardised</strong> (sums over all links to n), C is globally standardised (sums over all links to n), U is equal to C divided by the number of neighbours (sums over all links to unity), while S is the variance-stabilizing coding scheme proposed by Tiefelsdorf et al.&nbsp;1999, p.&nbsp;167-168 (sums over all links to n).</p>
+<p>If zero policy is set to TRUE, weights vectors of zero length are inserted for regions without neighbour in the neighbours list. These will in turn generate lag values of zero, equivalent to the sum of products of the zero row <code>t(rep(0, length=length(neighbours))) %*% x</code>, for arbitraty numerical vector <code>x</code> of length <code>length(neighbours)</code>. The spatially lagged value of x for the zero-neighbour region will then be zero, which may (or may not) be a sensible choice.</p>
+</section>
+</section>
+<section id="calculating-lisa" class="level1">
+<h1>Calculating LISA</h1>
+<p>To calculate LISAs we typically will provide a numeric object(s), a neighbor list, and a weights list–and often the argument <code>nsim</code> to determine the number of simulations to run. Most LISAs return a data frame of the same number of rows as the input dataframe. The resultant data frame can be unnested, or columns hoisted for ease of analysis.</p>
+<p>For example to calculate the Local Moran we use the function <a href="https://sfdep.josiahparry.com/reference/local_moran"><code>local_moran()</code></a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lisa <span class="ot">&lt;-</span> wm_q <span class="sc">%&gt;%</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">local_moran =</span> <span class="fu">local_moran</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    GDPPC, nb, wt, <span class="at">nsim =</span> <span class="dv">999</span>),</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">.before =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(local_moran) </span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#unnest to create individual columns </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Visualize this by converting insignificant values to NA. This uses a cutoff of 0.1.</p>
+<p>To have the four quadrants regions.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lisa <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pysal =</span> <span class="fu">ifelse</span>(p_folded_sim <span class="sc">&lt;=</span> <span class="fl">0.1</span>, <span class="fu">as.character</span>(pysal), <span class="cn">NA</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pysal)) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>() <span class="sc">+</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">lwd =</span> <span class="fl">0.2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#1C4769"</span>, <span class="st">"#24975E"</span>, <span class="st">"#EACA97"</span>, <span class="st">"#B20016"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="time-series---esha" class="level1">
+<h1>Time-Series - ESHA</h1>
+<section id="import-the-packages" class="level2">
+<h2 class="anchored" data-anchor-id="import-the-packages">Import the packages</h2>
+<p>plotly - makes the graph interactive - useful for time series.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, sfdep, tmap, tidyverse, knitr, plotly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="import-the-time-series-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-the-time-series-data">Import the Time Series Data</h2>
+<p>Hunan_GDPPC by years - comprising data of the GDPPC in 2005, 2006 and 2007 by the County.</p>
+<p>The time data field must be in <strong>Integers</strong> and not character.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>GDPPC <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/Hunan_GDPPC.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-a-time-series-cube---space-time-cube" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-time-series-cube---space-time-cube">Creating a Time Series Cube - Space Time Cube</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>hunan_spt <span class="ot">&lt;-</span> <span class="fu">spacetime</span>(GDPPC, hunan,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">.loc_col =</span> <span class="st">"County"</span>, </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">.time_col =</span> <span class="st">"Year"</span>) </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">is_spacetime_cube</span>(hunan_spt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+</section>
+<section id="computing-gi" class="level2">
+<h2 class="anchored" data-anchor-id="computing-gi">Computing GI*</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>GDPPC_nb <span class="ot">&lt;-</span> hunan_spt <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">activate</span>(<span class="st">"geometry"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">nb =</span> <span class="fu">include_self</span>(<span class="fu">st_contiguity</span>(geometry)),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">wt =</span> <span class="fu">st_weights</span>(nb), <span class="at">scale =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span>  </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_nbs</span>(<span class="st">"nb"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_wts</span>(<span class="st">"wt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gi_stars <span class="ot">&lt;-</span> GDPPC_nb <span class="sc">%&gt;%</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(<span class="st">"Year"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gi_star =</span> <span class="fu">local_gstar_perm</span>(GDPPC, nb, wt)) <span class="sc">%&gt;%</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">unnest</span>(gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="mandall-kendell-test" class="level2">
+<h2 class="anchored" data-anchor-id="mandall-kendell-test">Mandall Kendell Test</h2>
+<p>Select data from specific year</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cbg <span class="ot">&lt;-</span> gi_stars <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(County <span class="sc">==</span> <span class="st">"Changsha"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(County, <span class="st">"Year"</span>, gi_star)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Plot</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cbg, <span class="fu">aes</span>(Year, gi_star)) <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="inclass_ex02_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="ehsa" class="level2">
+<h2 class="anchored" data-anchor-id="ehsa">EHSA</h2>
+<p>While we can do the calculations manually as above, this is limited in two ways. Primarily that in the above example we used spatial neighbors only. Whereas in EHSA we can—and likely should—incorporate the time-lag of our spatial neighbors. Secondly, there are classifications proposed by ESRI which help us understand how each location is changing over time. Both of these are handled by the <a href="https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis"><code>emerging_hotspot_analysis()</code></a> function.</p>
+<p>This <a href="https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis"><code>emerging_hotspot_analysis()</code></a> takes a spacetime object <code>x</code>, and the quoted name of the variable of interested in <code>.var</code> at minimum. We can specify the number of time lags using the argument <code>k</code> which is set to 1 by default.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ehsa <span class="ot">&lt;-</span> <span class="fu">emerging_hotspot_analysis</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> hunan_spt, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.var =</span> <span class="st">"GDPPC"</span>, </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> <span class="dv">1</span>, </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">nsim =</span> <span class="dv">99</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(ehsa, classification)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 x 2
+  classification          n
+  &lt;chr&gt;               &lt;int&gt;
+1 no pattern detected     3
+2 oscilating coldspot     5
+3 oscilating hotspot     11
+4 sporadic coldspot      46
+5 sporadic hotspot       23</code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

@@ -53,6 +53,12 @@ We will be using the following data sets:
 
 -   Aspatial Data: Hunan's local development indicators in 2012. Hunan_2012.csv
 
+-   GDPPC stands for Gross Domestic Product Per Capita. It is a measure of the economic output of a country or region per person. This indicator is commonly used to assess the average economic performance or standard of living in a given area.
+
+-   GDP per capita is expressed in terms of a specific currency, such as dollars or euros, and it provides insight into the economic well-being of the average individual in a particular area. It is often used as an important economic indicator to compare the economic performance of different countries or regions and to analyze trends over time.
+
+-   High GDP per capita generally suggests a higher standard of living, better infrastructure, and more resources available per person. However, it's important to note that GDP per capita alone does not capture the distribution of income within a population, and factors like income inequality should also be considered for a more comprehensive understanding of economic well-being.
+
 ## Loading the Packages
 
 We will be using the following packages for this exercise:
@@ -102,11 +108,17 @@ hunan <- left_join(hunan,hunan2012)%>%
   select(1:4, 7, 15)
 ```
 
-1.  **`left_join(hunan, hunan2012)`**: This line performs a left join between the data frames **`hunan`** and **`hunan2012`**. The left join includes all rows from the **`hunan`** data frame and the matching rows from the **`hunan2012`** data frame based on a common key or keys. The result is a data frame with columns from both data frames.
+The **`select`** function is applied to the result of the **`left_join(hunan, hunan2012)`** operation. In other words, it is applied to the data frame that is the output of the left join.
 
-2.  **`%>%`**: The pipe operator (**`%>%`**) is used to pass the result of the left join to the next operation.
+In the context of the left join:
 
-3.  **`select(1:4, 7, 15)`**: This line selects specific columns from the joined data frame. Columns 1 through 4, column 7, and column 15 are retained in the final data frame, and the rest are dropped.
+-   Columns 1 through 4 (**`1:4`**) refer to columns 1 through 4 from the result of the left join.
+
+-   Column 7 (**`7`**) refers to column 7 from the result of the left join.
+
+-   Column 15 (**`15`**) refers to column 15 from the result of the left join.
+
+Therefore, the columns selected by **`select`** are from the data frame that results from the left join operation. If there are columns with the same name in both **`hunan`** and **`hunan2012`** data frames, the column names will be disambiguated in the result, typically with suffixes like **`_x`** for the left data frame and **`_y`** for the right data frame.
 
 ## Visualising the Data - Regional Development Indicator
 
@@ -1391,6 +1403,8 @@ The term 'hot spot' has been used generically across disciplines to describe a r
 
 ### **Getis and Ord's G-Statistics**
 
+Must be based on **Distance Weights** only!
+
 An alternative spatial statistics to detect spatial anomalies is the Getis and Ord's G-statistics (Getis and Ord, 1972; Ord and Getis, 1995). It looks at neighbours within a defined proximity to identify where either high or low values clutser spatially. Here, statistically significant hot-spots are recognised as areas of high values where other areas within a neighbourhood range also share high values too.
 
 The analysis consists of three steps:
@@ -1408,6 +1422,12 @@ The analysis consists of three steps:
 -   **Low Negative Z-Scores:** Locations with low negative z-scores are cold spots. This means that the values at these locations are lower than expected and are surrounded by other locations with low values.
 
 -   **Not Statistically Significant:** If the z-score is not statistically significant, it suggests that the observed clustering is likely due to random chance, and there is no clear evidence of hotspots or cold spots.
+
+**Two parts:**
+
+-   Gi value - exclude itself
+
+-   Gstari - include itself
 
 ### Deriving spatial weight matrix
 
