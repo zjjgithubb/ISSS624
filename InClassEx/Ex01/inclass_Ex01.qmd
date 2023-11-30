@@ -24,7 +24,7 @@ Using pacman to load the required packages.
 
 ```{r}
 
-pacman::p_load(sf, tmap, tidyverse)
+pacman::p_load(sf, tmap, mapview, tidyverse)
 ```
 
 ## Importing kml file
@@ -158,7 +158,7 @@ mpsz_origtrip <- left_join(mpsz19,
 
 ```
 
-## Visualisation of the Data 
+## Visualisation of the Data
 
 Using tmap
 

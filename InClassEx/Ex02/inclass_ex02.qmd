@@ -131,9 +131,9 @@ Two important concepts
 
     -   Negative - you see checker boxes, outliers (low-high, high-low)
 
-        ![](Local Moran.png)
+        ![](Local%20Moran.png)
 
-## Time Series - Emerging Hot Spot Analysis (EHSA) 
+## Time Series - Emerging Hot Spot Analysis (EHSA)
 
 **Mann-Kendall Test**
 
@@ -145,9 +145,9 @@ Two important concepts
 
 **ESHA** - It combines the traditional ESDA technique of hot spot analysis using the **Getis-Ord Gi\* statistic with the traditional time-series Mann-Kendall test for monotonic trends**. The goal of EHSA is to evaluate how hot and cold spots are changing over time. It helps us answer the questions: are they becoming increasingly hotter, are they cooling down, or are they staying the same?
 
-![](spacetime cube.png)
+![](spacetime%20cube.png)
 
-# Ex for In Class 
+# Ex for In Class
 
 ## Sfdep Package
 
@@ -189,7 +189,7 @@ Hunan_GDP contains the GDP by County from 2004 to 2021.
 HunanGDP <- read_xlsx("data/aspatial/Hunan_GDP.xlsx")
 ```
 
-## Joining the Data 
+## Joining the Data
 
 We will update the attribute table update the attribute table of *hunan*'s SpatialPolygonsDataFrame with the attribute fields of *hunan2012* dataframe. This is performed by using *left_join()* of **dplyr** package.
 
@@ -217,7 +217,7 @@ In the context of the left join:
 
 Therefore, the columns selected by **`select`** are from the data frame that results from the left join operation. If there are columns with the same name in both **`hunan`** and **`hunan2012`** data frames, the column names will be disambiguated in the result, typically with suffixes like **`_x`** for the left data frame and **`_y`** for the right data frame.
 
-## Visualising the Data - GDPPC 
+## Visualising the Data - GDPPC
 
 We will prepare a base map and a choropleth map showing the distribution of GDPPC 2012.
 
@@ -235,7 +235,7 @@ Hunan_GDPPCmap <- tm_shape(hunan_GDPPC) +
 tmap_arrange(Hunan_GDPPCmap)
 ```
 
-# Global Measures of Spatial Association 
+# Global Measures of Spatial Association
 
 sfdep utilizes list objects for both neighbors and weights. The neighbors and weights lists.
 
@@ -243,9 +243,9 @@ To identify contiguity-based neighbors, we use [`st_contiguity()`](https://sfdep
 
 These lists can be created line by line or within a pipe. The most common usecase is likely via a dplyr pipeline.
 
-## **Identifying contiguity neighbours: Queen\'s method**
+## **Identifying contiguity neighbours: Queen's method**
 
-In the code chunk below [`st_contiguity()`](https://sfdep.josiahparry.com/reference/st_contiguity.html) is used to derive a contiguity neighbour list by using Queen\'s method.
+In the code chunk below [`st_contiguity()`](https://sfdep.josiahparry.com/reference/st_contiguity.html) is used to derive a contiguity neighbour list by using Queen's method.
 
 ```{r}
 nb_queen <- hunan_GDPPC %>% 
@@ -270,7 +270,7 @@ kable(head(nb_queen,
            n=10))
 ```
 
-## **Identify contiguity neighbours: Rooks\' method**
+## **Identify contiguity neighbours: Rooks' method**
 
 ```{r}
 nb_rook <- hunan_GDPPC %>% 
@@ -329,7 +329,7 @@ nb <- st_knn(geo, longlat = TRUE)
 dists <- unlist(st_nb_dists(geo, nb))
 ```
 
--   [`st_nb_dists()`](https://sfdep.josiahparry.com/reference/st_nb_dists.html) of sfdep is used to calculate the nearest neighbour distance. The output is a list of distances for each observation\'s neighbors list.
+-   [`st_nb_dists()`](https://sfdep.josiahparry.com/reference/st_nb_dists.html) of sfdep is used to calculate the nearest neighbour distance. The output is a list of distances for each observation's neighbors list.
 
 -   [`unlist()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/unlist) of Base R is then used to return the output as a vector so that the summary statistics of the nearest neighbour distances can be derived.
 
@@ -365,7 +365,7 @@ wm_ad <- hunan_GDPPC %>%
 
 -   [`st_weights()`](https://sfdep.josiahparry.com/reference/st_weights.html) is then used to calculate polygon spatial weights of the nb list. Note that:
 
-    -   the default `style` argument is set to \"W\" for row standardized weights, and
+    -   the default `style` argument is set to "W" for row standardized weights, and
 
     -   the default `allow_zero` is set to TRUE, assigns zero as lagged value to zone without neighbors.
 
@@ -386,7 +386,7 @@ wm_idw <- hunan_GDPPC %>%
 
 ## Computing Global Moran's I
 
-In the code chunk below, global_moran() function is used to compute the Moran\'s I value. Different from spdep package, the output is a tibble data.frame.
+In the code chunk below, global_moran() function is used to compute the Moran's I value. Different from spdep package, the output is a tibble data.frame.
 
 ```{r}
 moranI <- global_moran(wm_q$GDPPC,
@@ -395,9 +395,9 @@ moranI <- global_moran(wm_q$GDPPC,
 glimpse(moranI)
 ```
 
-## Performing Global Moran's I test 
+## Performing Global Moran's I test
 
-In general, Moran\'s I test will be performed instead of just computing the Moran\'s I statistics. With sfdep package, Moran\'s I test can be performed by using [`global_moran_test()`](https://sfdep.josiahparry.com/reference/global_moran_test.html) as shown in the code chunk below.
+In general, Moran's I test will be performed instead of just computing the Moran's I statistics. With sfdep package, Moran's I test can be performed by using [`global_moran_test()`](https://sfdep.josiahparry.com/reference/global_moran_test.html) as shown in the code chunk below.
 
 ```{r}
 global_moran_test(wm_q$GDPPC,
@@ -405,7 +405,7 @@ global_moran_test(wm_q$GDPPC,
                        wm_q$wt)
 ```
 
-### **Performing Global Moran\'I permutation test**
+### **Performing Global Moran'I permutation test**
 
 In practice, monte carlo simulation should be used to perform the statistical test. For **sfdep**, it is supported by [`globel_moran_perm()`](https://sfdep.josiahparry.com/reference/global_moran_perm.html)
 
@@ -424,7 +424,7 @@ global_moran_perm(wm_q$GDPPC,
 
 # **Local Measures of Spatial Association - sfdep methods**
 
-## Using sfdep - calculate LISA 
+## Using sfdep - calculate LISA
 
 To calculate LISAs we typically will provide a numeric object(s), a neighbor list, and a weights list--and often the argument `nsim` to determine the number of simulations to run. Most LISAs return a data frame of the same number of rows as the input dataframe. The resultant data frame can be unnested, or columns hoisted for ease of analysis.
 
@@ -455,9 +455,9 @@ The output of `local_moran()` is a sf data.frame containing the columns ii, eii,
 
 -   kurtosis: For `localmoran_perm`, the output of e1071::kurtosis() for the permutation samples underlying the standard deviates.
 
-## Visualising LISA 
+## Visualising LISA
 
-### Visualising local Moran's I and p-value 
+### Visualising local Moran's I and p-value
 
 ```{r}
 tmap_mode("plot")
@@ -480,7 +480,7 @@ tmap_arrange(map1, map2, ncol = 2)
 
 ### Visualising LISA map
 
-LISA map is a categorical map showing outliers and clusters. There are two types of outliers namely: High-Low and Low-High outliers. Likewise, there are two type of clusters namely: High-High and Low-Low cluaters. In fact, LISA map is an interpreted map by combining local Moran\'s I of geographical areas and their respective p-values.
+LISA map is a categorical map showing outliers and clusters. There are two types of outliers namely: High-Low and Low-High outliers. Likewise, there are two type of clusters namely: High-High and Low-Low cluaters. In fact, LISA map is an interpreted map by combining local Moran's I of geographical areas and their respective p-values.
 
 In lisa sf data.frame, we can find three fields contain the LISA categories. They are *mean*, *median* and *pysal*. In general, **classification in *mean*** will be used as shown in the code chunk below.
 
@@ -496,9 +496,9 @@ tm_shape(lisa_sig) +
   tm_borders(alpha = 0.4)
 ```
 
-# Time-Series - ESHA 
+# Time-Series - ESHA
 
-## Import the packages 
+## Import the packages
 
 plotly - makes the graph interactive - useful for time series.
 
@@ -506,7 +506,7 @@ plotly - makes the graph interactive - useful for time series.
 pacman::p_load(sf, sfdep, tmap, tidyverse, knitr, plotly)
 ```
 
-## Import the Time Series Data 
+## Import the Time Series Data
 
 Hunan_GDPPC by years - comprising data of the GDPPC in 2005, 2006 and 2007 by the County.
 
@@ -516,7 +516,7 @@ The time data field must be in **Integers** and not character.
 GDPPC <- read_csv("data/aspatial/Hunan_GDPPC.csv")
 ```
 
-## Creating a Time Series Cube - Space Time Cube 
+## Creating a Time Series Cube - Space Time Cube
 
 Before getting started, students must read this [article](https://sfdep.josiahparry.com/articles/spacetime-s3.html) to learn the basic concept of spatio-temporal cube and its implementation in sfdep package.
 
@@ -533,7 +533,7 @@ hunan_spt <- spacetime(GDPPC, hunan,
 is_spacetime_cube(hunan_spt)
 ```
 
-## Computing GI\* 
+## Computing GI\*
 
 ### Deriving the Spatial Weights
 
@@ -550,7 +550,8 @@ is_spacetime_cube(hunan_spt)
 GDPPC_nb <- hunan_spt %>% 
   activate("geometry") %>% 
   mutate(nb = include_self(st_contiguity(geometry)),
-         wt = st_weights(nb), scale = 1, alpha = 1) %>%  
+         wt = st_inverse_distance(nb, geometry, scale = 1, alpha = 1),
+         .before = 1) %>%  
   set_nbs("nb") %>% 
   set_wts("wt")
 ```
@@ -585,7 +586,7 @@ ggplot(cbg, aes(Year, gi_star)) +
   theme_light()
 ```
 
-### Plotting using an interactive plot 
+### Plotting using an interactive plot
 
 Using plotly package:
 
@@ -630,7 +631,7 @@ emerging <- ehsa %>%
   slice(1:10)
 ```
 
-## EHSA 
+## EHSA
 
 In EHSA we can---and likely should---incorporate the time-lag of our spatial neighbors. Secondly, there are classifications proposed by ESRI which help us understand how each location is changing over time. Both of these are handled by the [`emerging_hotspot_analysis()`](https://sfdep.josiahparry.com/reference/emerging_hotspot_analysis) function.
 
@@ -658,9 +659,9 @@ ggplot(data = ehsa,
   geom_bar()
 ```
 
-![](EHSA Patterns.png)
+![](EHSA%20Patterns.png)
 
-![](EHSA Patterns coldspots.png)
+![](EHSA%20Patterns%20coldspots.png)
 
 ### Visualising EHSA Data
 
