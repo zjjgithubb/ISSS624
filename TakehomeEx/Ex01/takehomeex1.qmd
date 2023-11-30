@@ -218,7 +218,7 @@ print(duplicate_rows)
 Next, to answer the objectives, I need to filter the data according to the four different time slots.
 
 ::: panel-tabset
-## Weekdays Morning 
+## Weekdays Morning
 
 ```{r}
 origtrip_wd_am <- odbus %>%
@@ -430,7 +430,7 @@ Given these insights - I chose to perform the Emerging Hotspot Analysis instead.
 
 ## Doing EHSA with the Four Time Periods
 
-### Loading the Packages 
+### Loading the Packages
 
 ```{r}
 pacman::p_load(sf, sfdep, tmap, tidyverse, knitr, plotly)
@@ -877,7 +877,7 @@ df_weekend_filtered <- df_weekend %>%
   filter(!(grid_id %in% grid_ids_weekend_with_missing_hours))
 ```
 
-### Dataframe with the grid_id that are filtered 
+### Dataframe with the grid_id that are filtered
 
 ```{r}
 result_df3 <- semi_join(honeycomb_grid_sf, df_weekend_filtered, by = "grid_id")  
@@ -915,7 +915,7 @@ ptrip_weekends_nb <- ptrip_weekends_spt %>%
 #  tidyr::unnest(gi_star)
 ```
 
-## EHSA Analysis 
+## EHSA Analysis
 
 ```{r}
 ehsa_weekends <- emerging_hotspot_analysis(
@@ -926,7 +926,7 @@ ehsa_weekends <- emerging_hotspot_analysis(
 )
 ```
 
-## Distribution of EHSA Classes 
+## Distribution of EHSA Classes
 
 ```{r}
 #| code-fold: true
@@ -941,7 +941,7 @@ ggplot(data = ehsa_weekends, aes(x = classification, fill = classification)) +
         axis.ticks.x = element_blank())
 ```
 
-## EHSA on the Map (Weekends/Holidays) 
+## EHSA on the Map (Weekends/Holidays)
 
 ```{r}
 #| code-fold: true
@@ -977,7 +977,7 @@ Comparing with the weekdays, the trending in terms of the classification is some
 
 In terms of the regions - it would seem to be similar to that of weekdays at the respective town regions. Understandably so, given that the human flow from these region would be the same.
 
-# Conclusions 
+# Conclusions
 
 In this exercise, I have looked at the passenger trips data and explored the geospatial association.
 
