@@ -12,9 +12,9 @@ execute:
 editor: visual 
 ---
 
-# Processsing and Visualising Flow Data 
+# Processsing and Visualising Flow Data
 
-## Loading the required Packages 
+## Loading the required Packages
 
 Here's a brief overview of each of the R packages:
 
@@ -37,7 +37,7 @@ Here's a brief overview of each of the R packages:
 pacman::p_load(tmap, sf, DT, stplanr, performance, ggpubr, tidyverse)
 ```
 
-## Preparing the Flow Data 
+## Preparing the Flow Data
 
 We will be using the Passenger Volume data from LTA again.
 
@@ -86,7 +86,7 @@ The code chunk below will be used to import the save odbus6_9.rds into R environ
 odbus6_9 <- read_rds("data/rds/odbus6_9.rds")
 ```
 
-### Working with Geospatial Data 
+### Working with Geospatial Data
 
 For the purpose of this exercise, two geospatial data will be used. They are:
 
@@ -120,7 +120,7 @@ busstop_mpsz <- st_intersection(busstop, mpsz) %>%
 write_rds(busstop_mpsz, "data/rds/busstop_mpsz.rds")  
 ```
 
-### Appending Data and Checking Data  
+### Appending Data and Checking Data
 
 ```{r}
 od_data <- left_join(odbus6_9 , busstop_mpsz,
@@ -168,15 +168,15 @@ od_data <- read_rds("data/rds/od_data.rds")
 ```
 :::
 
-## Visualising the Spatial Interaction 
+## Visualising the Spatial Interaction
 
 We will be using the `stplanr package`.
 
 [stplanr](https://cran.r-project.org/web/packages/stplanr/vignettes/stplanr.html) was initially developed to answer a practical question: how to convert official data on travel behaviour into geographic objects that can be plotted on a map and analysed using methods from geographical information systems (GIS)? Specifically, how can origin-destination (OD) data, such as the open datasets provided by the UK Data Services WICID portal (see [wicid.ukdataservice.ac.uk/](https://wicid.ukdataservice.ac.uk/)), be used to estimate cycling potential down to the street levels at city and national levels? The project was initially developed to support the Propensity to Cycle Tool (PCT), which has now been deployed as a national web application hosted at www.pct.bike and written-up as an academic paper (Lovelace et al. 2017).
 
-**stplanr** has since grown to include a wide range of functions for transport planning. The package was [reviewed](https://github.com/ropensci/software-review/issues/10) through the rOpenSci package review process and the package is now hosted on their site. See the website at [docs.ropensci.org/stplanr](https://docs.ropensci.org/stplanr/). A more detailed overview of the package\'s aims and capabilities is contained in a [longer vignette](https://github.com/ropensci/stplanr/blob/master/vignettes/stplanr-paper.Rmd), which has since been published in the R Journal (Lovelace and Ellison 2018).
+**stplanr** has since grown to include a wide range of functions for transport planning. The package was [reviewed](https://github.com/ropensci/software-review/issues/10) through the rOpenSci package review process and the package is now hosted on their site. See the website at [docs.ropensci.org/stplanr](https://docs.ropensci.org/stplanr/). A more detailed overview of the package's aims and capabilities is contained in a [longer vignette](https://github.com/ropensci/stplanr/blob/master/vignettes/stplanr-paper.Rmd), which has since been published in the R Journal (Lovelace and Ellison 2018).
 
-### Removing Intra-zonal Flows 
+### Removing Intra-zonal Flows
 
 We will not plot the intra-zonal flows. The code chunk below will be used to remove intra-zonal flows.
 
