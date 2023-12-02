@@ -19,6 +19,8 @@ website:
             href: InClassEx/Ex01/inclass_Ex01.html
           - text: In-Class Ex 02
             href: InClassEx/Ex02/inclass_ex02.html
+          - text: In-Class Ex 03
+            href: InClassEx/Ex02/inclass_Ex03.html
       - text: Take-Home Ex
         menu: 
           - text: Take-Home Ex 01
