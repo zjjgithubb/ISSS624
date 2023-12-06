@@ -13,6 +13,10 @@ website:
             href: HandsOnEx/HandsOnEx2/handsonex2.html
           - text: Hands-On Ex 3
             href: HandsOnEx/HandsOnEx3/Handson_Ex03.html
+          - text: Hands-On Ex 4
+            href: HandsOnEx/HandsOnEx4/handsonex4.html
+          - text: Hands-On Ex 5
+            href: HandsOnEx/HandsOnEx5/handsonex5.html
       - text: In-Class Ex
         menu: 
           - text: In-Class Ex 01
@@ -21,12 +25,16 @@ website:
             href: InClassEx/Ex02/inclass_ex02.html
           - text: In-Class Ex 03
             href: InClassEx/Ex03/Inclass_Ex03.html
+          - text: In-Class Ex 04
+            href: InClassEx/Ex04/inclassex4.html
+          - text: In-Class Ex 05
+            href: InClassEx/Ex05/inclassex5.html
       - text: Take-Home Ex
         menu: 
           - text: Take-Home Ex 01
             href: TakehomeEx/Ex01/takehomeex1.html
           - text: Take-Home Ex 02
-            href: TakehomeEx/Ex01/takehomeex2.html
+            href: TakehomeEx/Ex02/takehomeex2.html
     right:
       - href: index.qmd
         text: Home
