@@ -7,7 +7,7 @@ date-modified: "last-modified"
 format: html
 execute: 
   echo: true
-  eval: true
+  eval: false
   warning: false
   
 editor: visual 
@@ -229,6 +229,10 @@ origtrip_wd_am <- odbus %>%
   summarise (Wd_AM = sum(TOTAL_TRIPS))
 ```
 
+```{r}
+write_rds(origtrip_wd_am, "data/rds/origtrip_wd_am.rds") 
+```
+
 ## Weekdays Afternoon
 
 ```{r}
@@ -238,6 +242,10 @@ origtrip_wd_pm <- odbus %>%
            TIME_PER_HOUR <= 20) %>%
   group_by(ORIGIN_PT_CODE) %>%
   summarise (Wd_PM = sum(TOTAL_TRIPS))
+```
+
+```{r}
+write_rds(origtrip_wd_pm, "data/rds/origtrip_wd_pm.rds") 
 ```
 
 ## Weekends / Holiday Morning
@@ -252,6 +260,10 @@ origtrip_wend_am <- odbus %>%
 
 ```
 
+```{r}
+write_rds(origtrip_wend_am, "data/rds/origtrip_wend_am.rds") 
+```
+
 ## Weekends / Holiday Evening
 
 ```{r}
@@ -263,6 +275,10 @@ origtrip_wend_pm <- odbus %>%
   group_by(ORIGIN_PT_CODE) %>%
   summarise (We_PM = sum(TOTAL_TRIPS))
 
+```
+
+```{r}
+write_rds(origtrip_wend_pm, "data/rds/origtrip_wend_pm.rds") 
 ```
 :::
 

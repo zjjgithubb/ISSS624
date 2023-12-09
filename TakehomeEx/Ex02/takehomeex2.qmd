@@ -7,8 +7,250 @@ date-modified: "last-modified"
 format: html
 execute: 
   echo: true
-  eval: true
+  eval: false
   warning: false
   
 editor: visual 
 ---
+
+# Overview of the Exercise
+
+::: panel-tabset
+## Setting the Scene
+
+What are the driving forces behind urban dwellers to weak up early in morning to commute from their home locations to their work places? What are the impact of removing a public bus service on the commuters reside along the corridor of the bus route? These and many other questions related to urban mobility are challenges faced by transport operators and urban managers.
+
+To provide answer to this question, traditionally, commuters survey will be used. However, commuters survey is a very costly, time-consuming and laborous, not to mention that the survey data tend to take a long time to clean and analyse. As a result, it is not unusual, by the time the survey report was ready, most of the information already out-of-date!
+
+As city-wide urban infrastructures such as public buses, mass rapid transits, public utilities and roads become digital, the data sets obtained can be used as a framework for tracking movement patterns through space and time. This is particularly true with the recent trend of massive deployment of pervasive computing technologies such as GPS on the vehicles and SMART cards used by public transport commuters.
+
+Unfortunately, this explosive growth of geospatially-referenced data has far outpaced the planner's ability to utilize and transform the data into insightful information thus creating an adverse impact on the return on the investment made to collect and manage this data.
+
+## Motivation and Objective
+
+This take-home exercise is motivated by two main reasons. Firstly, despite increasing amounts of open data available for public consumption, there has not been significant practice research carried out to show how these disparate data sources can be integrated, analysed, and modelled to support policy making decisions.
+
+Secondly, there is a general lack of practical research to show how geospatial data science and analysis (GDSA) can be used to support decision-making.
+
+Hence, your task for this take-home exercise is to conduct a case study to demonstrate the potential value of GDSA to integrate publicly available data from multiple sources for building a spatial interaction models to determine factors affecting urban mobility patterns of public bus transit.
+
+## The Data
+
+### Open Gov Data
+
+For the purpose of this assignment, data from several open government sources will be used:
+
+-   *Passenger Volume by Origin Destination Bus Stops*, *Bus Stop Location*, *Train Station* and *Train Station Exit Point*, just to name a few of them, from [LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en.html).
+
+-   *Master Plan 2019 Subzone Boundary*, *HDB Property Information*, *School Directory and Information* and other relevant data from [Data.gov.sg](https://beta.data.gov.sg/).
+
+### **Specially collected data**
+
+-   Businesses, retail and services, leisure and recreation, etc geospatial data sets assemble by course instructor. (Refer to eLearn)
+:::
+
+# Task
+
+The specific tasks of this take-home exercise are as follows:
+
+## **Geospatial Data Science**
+
+-   Derive an analytical hexagon data of 325m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
+
+-   With reference to the time intervals provided in the table below, construct an O-D matrix of commuter flows for a time interval of your choice by integrating *Passenger Volume by Origin Destination Bus Stops* and *Bus Stop Location* from [LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en.html). The O-D matrix must be aggregated at the analytics hexagon level
+
+    | Peak hour period             | Bus tap on time |
+    |------------------------------|-----------------|
+    | Weekday morning peak         | 6am to 9am      |
+    | Weekday afternoon peak       | 5pm to 8pm      |
+    | Weekend/holiday morning peak | 11am to 2pm     |
+    | Weekend/holiday evening peak | 4pm to 7pm      |
+
+-   Display the O-D flows of the passenger trips by using appropriate geovisualisation methods (not more than 5 maps).
+
+-   Describe the spatial patterns revealed by the geovisualisation (not more than 100 words per visual).
+
+-   Assemble at least three propulsive and three attractiveness variables by using aspatial and geospatial from publicly available sources.
+
+-   Compute a distance matrix by using the analytical hexagon data derived earlier.
+
+## **Spatial Interaction Modelling**
+
+-   Calibrate spatial interactive models to determine factors affecting urban commuting flows at the selected time interval.
+
+-   Present the modelling results by using appropriate geovisualisation and graphical visualisation methods. (Not more than 5 visuals)
+
+-   With reference to the Spatial Interaction Model output tables, maps and data visualisation prepared, describe the modelling results. (not more than 100 words per visual).
+
+# Getting Started
+
+## Loading the Packages
+
+```{r}
+pacman::p_load(tmap, sf, sp, DT,
+               performance, reshape2,
+               ggpubr, tidyverse, stplanr)
+```
+
+## Preparing the Flow Data
+
+::: panel-tabset
+## Importing the OD Data
+
+```{r}
+odbus <- read_csv("data/aspatial/origin_destination_bus_202310.csv")
+```
+
+## Extracting the Data according to the Weekday AM period
+
+```{r}
+odbus6_9 <- odbus %>%
+  filter(DAY_TYPE == "WEEKDAY") %>%
+  filter(TIME_PER_HOUR >= 6 &
+           TIME_PER_HOUR <= 9) %>%
+  group_by(ORIGIN_PT_CODE,
+           DESTINATION_PT_CODE) %>%
+  summarise(TRIPS = sum(TOTAL_TRIPS))
+
+
+```
+
+## Working with Geospatial Data
+
+```{r}
+busstops = st_read(dsn = "data/geospatial", 
+               layer = "BusStop") %>%
+  st_transform (crs = 3414)
+```
+
+## Creating Hexagonal Grids
+
+Create analytical hexagon data of 325m (this distance is the perpendicular distance between the centre of the hexagon and its edges) - so should be **c(650, 650)**.
+
+```{r}
+hexagon_grid = st_make_grid(busstops, c(650, 650), what = "polygons", square = FALSE)
+
+
+hexagon_grid_sf = st_sf(hexagon_grid) %>%
+  mutate(grid_id = 1:length(lengths(hexagon_grid)))
+```
+
+## Combine with Hexagon Grid
+
+```{r}
+
+busstop_grid <- st_intersection(busstops, hexagon_grid_sf) %>%
+  select(BUS_STOP_N, grid_id) %>%
+  st_drop_geometry()
+
+
+
+```
+
+## Appending Data and Checking
+
+```{r}
+
+od_data_wdam <- left_join(odbus6_9 , busstop_grid,
+            by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
+  rename(ORIGIN_BS = ORIGIN_PT_CODE,
+         ORIGIN_Grid = grid_id,
+         DESTIN_BS = DESTINATION_PT_CODE)
+```
+
+```{r}
+duplicate <- od_data_wdam %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+```
+
+```{r}
+od_data_wdam <- unique(od_data_wdam)
+
+```
+
+```{r}
+od_data_wdam <- left_join(od_data_wdam , busstop_grid,
+            by = c("DESTIN_BS" = "BUS_STOP_N")) 
+
+duplicate <- od_data %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+
+od_data_wdam <- unique(od_data_wdam)
+
+od_data_wdam <- od_data_wdam %>%
+  rename(DESTIN_Grid = grid_id) %>%
+  drop_na() %>%
+  group_by(ORIGIN_Grid, DESTIN_Grid) %>%
+  summarise(MORNING_PEAK = sum(TRIPS))
+```
+:::
+
+Why choose Weekday AM - travel to work and study
+
+-   the data is limited also in a sense, technically we need to know which days etc, e.g. between fri and thurs etc
+
+# Visualising the Spatial Interaction
+
+## Removing Intra-Grid Flow
+
+```{r}
+od_data1 <- od_data_wdam[od_data_wdam$ORIGIN_Grid!=od_data_wdam$DESTIN_Grid,]
+```
+
+## Creating Desire Lines
+
+```{r}
+flowLine <- od2line(flow = od_data1, 
+                    zones = hexagon_grid_sf,
+                    zone_code = "grid_id")
+```
+
+```{r}
+sf::st_geometry(hexagon_busstops)
+```
+
+```{r}
+sf::st_geometry(flowLine)
+```
+
+```{r}
+tmap_mode("view")
+
+tm_shape(hexagon_busstops) +
+  tm_borders() +
+  tm_polygons() +
+flowLine %>%  
+  filter(MORNING_PEAK >= 5000) %>%
+tm_shape() +
+  tm_lines(lwd = "MORNING_PEAK",
+           style = "quantile",
+           scale = c(0.1, 1, 3, 5, 7, 10),
+           n = 6,
+           alpha = 0.3)
+```
+
+# Analysis 
+
+## Spatial Patterns 
+
+## Propulsive and Attractiveness Variables 
+
+# Spatial Interaction Modelling 
+
+## Computing the Distance Matrix 
+
+## Preparing the Data 
+
+Use train station or the train station exit point - I think its the exit point
+
+School locations can be attractiveness factors - especially since i look at the weekdays morning peak period - school going students
+
+Where to get the data and how to import with the hexagon layer
+
+HDB property information - types of hdb properties, total dwelling units - to find out the number of households to peg into the hexagon unit, as a proxy to estimate the population, 80% of the population stays in HDB (Not including Condo, Private, Landed) - unlikely that they take public transport? Need to convert the lat-long to geometry data
+
+if we want to have a more accurate proxy - we can go by the type of the hbb flat (1 room, 2 room, 3 room) - multiply by the typical size

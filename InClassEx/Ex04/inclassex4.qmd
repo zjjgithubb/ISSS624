@@ -1,3 +1,228 @@
 ---
 title: "In Class Ex 4"
+
+date: "9 Dec 23"
+date-modified: "last-modified" 
+
+format: html
+execute: 
+  echo: true
+  eval: false
+  warning: false
+  
+editor: visual 
 ---
+
+# Overview of In-Class Ex 4
+
+In this exercise - we will do hands-on on the following:
+
+-   Performing geocoding
+
+-   calibrating Geographically Weighted Poisson Regression
+
+# Getting Started
+
+```{r}
+pacman::p_load(tmap, sf, httr, tidyverse)
+```
+
+-   httr - to allows us to work with html, communicate with web-server etc - new package available as httr2
+
+#\| eval = false (to freeze certain chunk, save the file as rds)
+
+# Working with OneMap API 
+
+```{r}
+
+url <- "https://www.onemap.gov.sg/api/common/elastic/search"
+
+
+csv <- read_csv("data/aspatial/GeneralInformationofschools.csv")
+
+postcodes <- csv$postal_code #to only send in the postalcode, this will keep it simpler and faster 
+
+found <- data.frame()
+not_found <- data.frame()
+
+for (postcode in postcodes) {
+  query <- list("searchVal" = postcode, 'returnGeom' = 'Y', 'getAddrDetails' = 'Y', 'pageNum' = '1')
+  res <- GET(url, query = query)
+  
+  if((content(res)$found)!=0) {
+    found <- rbind (found, data.frame(content(res))[4:13], show_col_types = FALSE)
+    } else {
+    not_found = data.frame(postcode)
+    }
+}
+```
+
+```{r}
+merged = merge (csv, found, by.x = 'postal_code', by.y = 'results.POSTAL', all=TRUE)
+
+merged_cleaned <- na.omit(merged)
+
+write.csv(merged_cleaned, "data/aspatial/schools.csv")
+write.csv(not_found, "data/aspatial/not_found.csv")
+```
+
+## 
+
+```{r}
+schools <- read_csv ("data/aspatial/schools.csv") %>%
+  rename (latitude = "results.LATITUDE",
+          longitude = "results.LONGITUDE") %>%
+  select(postal_code, school_name, latitude, longitude)
+```
+
+```{r}
+schools_sf <- st_as_sf(schools,
+                      coords = c("longitude", "latitude"),
+                      crs = 4326) %>%
+  st_transform (crs=3414)
+```
+
+```{r}
+
+tmap_mode("view")
+
+tm_shape(schools_sf) +
+  tm_dots()
+
+ 
+tmap_mode("plot")  # to stop interactive mode
+
+```
+
+```{r}
+mpsz$SCHOOL_COUNT <- lengths(
+  st_intersects(
+    mpsz, schools_sf))
+```
+
+```{r}
+summary(mpsz$SCHOOL_COUNT)
+```
+
+```{r}
+retails_sf <- st_read(dsn = "data/geospatial", 
+               layer = "Retails")
+
+```
+
+```{r}
+business_sf <- st_read(dsn = "data/geospatial", 
+               layer = "Business")
+
+```
+
+```{r}
+
+tmap_mode("plot")
+
+tm_shape(mpsz) +
+  tm_polygons() +
+tm_shape(retails_sf) +
+  tm_dots()
+```
+
+```{r}
+tmap_options(check.and.fix = TRUE)
+tmap_mode("plot")
+
+tm_shape(mpsz) +
+  tm_polygons() +
+tm_shape(business_sf) +
+  tm_dots()
+```
+
+Using the **destination code not origin code** - to specify the attractiveness, if we are looking at the flow from home to destination.
+
+```{r}
+#flow_data_1 <- flow_data_1 %>%
+#  left_join(mpsz_tidy,
+#            by = c("DESTN_SZ" = "SUBZONE_C"))
+```
+
+Must check for 0 values! -\> Because we are using log function - 0 will cause errors!
+
+# Calibrating Spatial Interaction Model
+
+## Loading the Packages
+
+```{r}
+pacman::p_load(tmap, sf, sp, DT,
+               performance, reshape2,
+               ggpubr, tidyverse)
+```
+
+Need to adjust the retail_count to business_count
+
+```{r}
+flow_data_2 <- read_rds ("data/rds/flow_data_tidy.rds")
+
+```
+
+```{r}
+
+flow_data_2$FlowNoIntra <- ifelse(
+  flow_data_2$ORIGIN_SZ == flow_data_2$DESTIN_SZ, 
+  0, flow_data_2$MORNING_PEAK)
+
+flow_data_2$offset <- ifelse(
+  flow_data_2$ORIGIN_SZ == flow_data_2$DESTIN_SZ, 
+  0.000001, 1)
+```
+
+```{r}
+inter_zonal_flow <- flow_data_2 %>%
+  filter (FlowNoIntra > 0)
+```
+
+```{r}
+inter_zonal_flow <- inter_zonal_flow %>%
+  rename (TRIPS = MORNING_PEAK,
+          DIST = dist)
+```
+
+## Origin Constrained SIM
+
+```{r}
+
+#| eval = FALSE
+
+orcSIM_Poisson <- glm(formula = TRIPS ~ 
+                 ORIGIN_SZ +
+                 log(SCHOOL_COUNT) +
+                 log(RETAIL_COUNT) +
+                 log(DIST) - 1 ,  #-1 is to remove the intercept
+              family = poisson(link = "log"),
+              data = inter_zonal_flow,
+              na.action = na.exclude)
+
+summary(orcSIM_Poisson)
+options(max.print = 99999)
+```
+
+We are interested in the log school count, log retail count and log dist values.
+
+-   Distance must be negative - inverse (further not attractive)
+
+## Goodness of Fit
+
+```{r}
+CalcRSquared <- function(observed,estimated){
+  r <- cor(observed,estimated)
+  R2 <- r^2
+  R2
+}
+```
+
+```{r}
+CalcRSquared(orcSIM_Poisson$data$TRIPS, orcSIM_Poisson$fitted.values)
+```
+
+```{r}
+performance_rmse(orcSIM_Poisson,
+                 normalized = FALSE)
+```
