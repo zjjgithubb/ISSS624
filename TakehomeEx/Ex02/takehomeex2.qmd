@@ -7,7 +7,7 @@ date-modified: "last-modified"
 format: html
 execute: 
   echo: true
-  eval: false
+  eval: true
   warning: false
   
 editor: visual 
@@ -55,7 +55,7 @@ The specific tasks of this take-home exercise are as follows:
 
 ## **Geospatial Data Science**
 
--   Derive an analytical hexagon data of 325m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
+-   Derive an analytical hexagon data of 375m (this distance is the perpendicular distance between the centre of the hexagon and its edges) to represent the [traffic analysis zone (TAZ)](https://tmg.utoronto.ca/files/Reports/Traffic-Zone-Guidance_March-2021_Final.pdf).
 
 -   With reference to the time intervals provided in the table below, construct an O-D matrix of commuter flows for a time interval of your choice by integrating *Passenger Volume by Origin Destination Bus Stops* and *Bus Stop Location* from [LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en.html). The O-D matrix must be aggregated at the analytics hexagon level
 
@@ -125,11 +125,10 @@ busstops = st_read(dsn = "data/geospatial",
 
 ## Creating Hexagonal Grids
 
-Create analytical hexagon data of 325m (this distance is the perpendicular distance between the centre of the hexagon and its edges) - so should be **c(650, 650)**.
+Create analytical hexagon data of 325m (this distance is the perpendicular distance between the centre of the hexagon and its edges) - so should be **c(750, 750)**.
 
 ```{r}
-hexagon_grid = st_make_grid(busstops, c(650, 650), what = "polygons", square = FALSE)
-
+hexagon_grid = st_make_grid(busstops, c(750, 750), what = "polygons", square = FALSE)
 
 hexagon_grid_sf = st_sf(hexagon_grid) %>%
   mutate(grid_id = 1:length(lengths(hexagon_grid)))
@@ -138,8 +137,11 @@ hexagon_grid_sf = st_sf(hexagon_grid) %>%
 ## Combine with Hexagon Grid
 
 ```{r}
+hexagon_grid_sf$n_busstops = lengths(st_intersects(hexagon_grid_sf, busstops))
 
-busstop_grid <- st_intersection(busstops, hexagon_grid_sf) %>%
+hexagon_busstop = filter(hexagon_grid_sf, n_busstops > 0)
+
+busstop_grid <- st_intersection(busstops, hexagon_grid_sf)%>%
   select(BUS_STOP_N, grid_id) %>%
   st_drop_geometry()
 
@@ -174,7 +176,7 @@ od_data_wdam <- unique(od_data_wdam)
 od_data_wdam <- left_join(od_data_wdam , busstop_grid,
             by = c("DESTIN_BS" = "BUS_STOP_N")) 
 
-duplicate <- od_data %>%
+duplicate <- od_data_wdam %>%
   group_by_all() %>%
   filter(n()>1) %>%
   ungroup()
@@ -210,17 +212,9 @@ flowLine <- od2line(flow = od_data1,
 ```
 
 ```{r}
-sf::st_geometry(hexagon_busstops)
-```
-
-```{r}
-sf::st_geometry(flowLine)
-```
-
-```{r}
 tmap_mode("view")
 
-tm_shape(hexagon_busstops) +
+tm_shape(hexagon_busstop) +
   tm_borders() +
   tm_polygons() +
 flowLine %>%  
@@ -233,17 +227,17 @@ tm_shape() +
            alpha = 0.3)
 ```
 
-# Analysis 
+# Analysis
 
-## Spatial Patterns 
+## Spatial Patterns
 
-## Propulsive and Attractiveness Variables 
+## Propulsive and Attractiveness Variables
 
-# Spatial Interaction Modelling 
+# Spatial Interaction Modelling
 
-## Computing the Distance Matrix 
+## Computing the Distance Matrix
 
-## Preparing the Data 
+## Preparing the Data
 
 Use train station or the train station exit point - I think its the exit point
 

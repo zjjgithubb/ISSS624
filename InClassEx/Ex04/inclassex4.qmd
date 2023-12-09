@@ -7,7 +7,7 @@ date-modified: "last-modified"
 format: html
 execute: 
   echo: true
-  eval: false
+  eval: true
   warning: false
   
 editor: visual 
@@ -31,7 +31,9 @@ pacman::p_load(tmap, sf, httr, tidyverse)
 
 #\| eval = false (to freeze certain chunk, save the file as rds)
 
-# Working with OneMap API 
+# Working with OneMap API
+
+## Querying the Lat,Long of Schools through One Map 
 
 ```{r}
 
@@ -57,16 +59,35 @@ for (postcode in postcodes) {
 }
 ```
 
+## Data Wrangling 
+
+To ensure that we have the correct number of data.
+
+-   345 schools with lat,long
+
+-   1 school not found - Zheng Hua Secondary School
+
 ```{r}
 merged = merge (csv, found, by.x = 'postal_code', by.y = 'results.POSTAL', all=TRUE)
 
 merged_cleaned <- na.omit(merged)
 
+duplicate <- merged_cleaned %>%
+  group_by_all() %>%
+  filter(n()>1) %>%
+  ungroup()
+
+merged_cleaned <- unique(merged_cleaned)
+```
+
+## Write the Data back to .csv
+
+```{r}
 write.csv(merged_cleaned, "data/aspatial/schools.csv")
 write.csv(not_found, "data/aspatial/not_found.csv")
 ```
 
-## 
+## Re-read the data and select key data 
 
 ```{r}
 schools <- read_csv ("data/aspatial/schools.csv") %>%
@@ -74,6 +95,8 @@ schools <- read_csv ("data/aspatial/schools.csv") %>%
           longitude = "results.LONGITUDE") %>%
   select(postal_code, school_name, latitude, longitude)
 ```
+
+## Mapping the Locations of Schools
 
 ```{r}
 schools_sf <- st_as_sf(schools,
@@ -94,6 +117,18 @@ tmap_mode("plot")  # to stop interactive mode
 
 ```
 
+## Plotting together with MPSZ 2019 Data 
+
+```{r}
+mpsz = st_read(dsn = "data/geospatial", 
+               layer = "MPSZ-2019") %>%
+  st_transform (crs = 3414)
+```
+
+```{r}
+write_rds(mpsz, "data/rds/mpsz.rds") 
+```
+
 ```{r}
 mpsz$SCHOOL_COUNT <- lengths(
   st_intersects(
@@ -103,6 +138,8 @@ mpsz$SCHOOL_COUNT <- lengths(
 ```{r}
 summary(mpsz$SCHOOL_COUNT)
 ```
+
+## Other Factors - Business and Retail
 
 ```{r}
 retails_sf <- st_read(dsn = "data/geospatial", 
@@ -117,7 +154,7 @@ business_sf <- st_read(dsn = "data/geospatial",
 ```
 
 ```{r}
-
+tmap_options(check.and.fix = TRUE)
 tmap_mode("plot")
 
 tm_shape(mpsz) +
@@ -139,9 +176,11 @@ tm_shape(business_sf) +
 Using the **destination code not origin code** - to specify the attractiveness, if we are looking at the flow from home to destination.
 
 ```{r}
-#flow_data_1 <- flow_data_1 %>%
-#  left_join(mpsz_tidy,
-#            by = c("DESTN_SZ" = "SUBZONE_C"))
+#| eval = FALSE
+
+flow_data_1 <- flow_data_1 %>%
+  left_join(mpsz_tidy,
+            by = c("DESTN_SZ" = "SUBZONE_C"))
 ```
 
 Must check for 0 values! -\> Because we are using log function - 0 will cause errors!
@@ -156,7 +195,7 @@ pacman::p_load(tmap, sf, sp, DT,
                ggpubr, tidyverse)
 ```
 
-Need to adjust the retail_count to business_count
+Need to adjust the retail_count to business_count?
 
 ```{r}
 flow_data_2 <- read_rds ("data/rds/flow_data_tidy.rds")
@@ -189,8 +228,6 @@ inter_zonal_flow <- inter_zonal_flow %>%
 
 ```{r}
 
-#| eval = FALSE
-
 orcSIM_Poisson <- glm(formula = TRIPS ~ 
                  ORIGIN_SZ +
                  log(SCHOOL_COUNT) +
@@ -201,6 +238,7 @@ orcSIM_Poisson <- glm(formula = TRIPS ~
               na.action = na.exclude)
 
 summary(orcSIM_Poisson)
+
 options(max.print = 99999)
 ```
 
@@ -225,4 +263,22 @@ CalcRSquared(orcSIM_Poisson$data$TRIPS, orcSIM_Poisson$fitted.values)
 ```{r}
 performance_rmse(orcSIM_Poisson,
                  normalized = FALSE)
+```
+
+## Doubly Constrained
+
+never -1 ; because we dont have to worry about the intercept
+
+```{r}
+dbcSIM_Poisson <- glm(formula = TRIPS ~ 
+                ORIGIN_SZ + 
+                DESTIN_SZ + 
+                log(SCHOOL_COUNT) +
+                 log(RETAIL_COUNT) +
+                log(DIST),
+              family = poisson(link = "log"),
+              data = inter_zonal_flow,
+              na.action = na.exclude)
+
+summary(dbcSIM_Poisson)
 ```

@@ -7,7 +7,7 @@ date-modified: "last-modified"
 format: html
 execute: 
   echo: true
-  eval: false
+  eval: true
   warning: false
   
 editor: visual 
