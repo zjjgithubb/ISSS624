@@ -33,9 +33,10 @@ pacman::p_load(tmap, sf, httr, tidyverse)
 
 # Working with OneMap API
 
-## Querying the Lat,Long of Schools through One Map 
+## Querying the Lat,Long of Schools through One Map
 
 ```{r}
+#| eval: false
 
 url <- "https://www.onemap.gov.sg/api/common/elastic/search"
 
@@ -59,7 +60,7 @@ for (postcode in postcodes) {
 }
 ```
 
-## Data Wrangling 
+## Data Wrangling
 
 To ensure that we have the correct number of data.
 
@@ -68,6 +69,7 @@ To ensure that we have the correct number of data.
 -   1 school not found - Zheng Hua Secondary School
 
 ```{r}
+#| eval: false
 merged = merge (csv, found, by.x = 'postal_code', by.y = 'results.POSTAL', all=TRUE)
 
 merged_cleaned <- na.omit(merged)
@@ -83,11 +85,12 @@ merged_cleaned <- unique(merged_cleaned)
 ## Write the Data back to .csv
 
 ```{r}
+#| eval: false
 write.csv(merged_cleaned, "data/aspatial/schools.csv")
 write.csv(not_found, "data/aspatial/not_found.csv")
 ```
 
-## Re-read the data and select key data 
+## Re-read the data and select key data
 
 ```{r}
 schools <- read_csv ("data/aspatial/schools.csv") %>%
@@ -106,18 +109,19 @@ schools_sf <- st_as_sf(schools,
 ```
 
 ```{r}
+write_rds(schools_sf, "data/rds/schools_sf.rds")
+```
+
+```{r}
 
 tmap_mode("view")
 
 tm_shape(schools_sf) +
   tm_dots()
 
- 
-tmap_mode("plot")  # to stop interactive mode
-
 ```
 
-## Plotting together with MPSZ 2019 Data 
+## Plotting together with MPSZ 2019 Data
 
 ```{r}
 mpsz = st_read(dsn = "data/geospatial", 

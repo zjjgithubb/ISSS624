@@ -59,12 +59,12 @@ The specific tasks of this take-home exercise are as follows:
 
 -   With reference to the time intervals provided in the table below, construct an O-D matrix of commuter flows for a time interval of your choice by integrating *Passenger Volume by Origin Destination Bus Stops* and *Bus Stop Location* from [LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en.html). The O-D matrix must be aggregated at the analytics hexagon level
 
-    | Peak hour period             | Bus tap on time |
-    |------------------------------|-----------------|
-    | Weekday morning peak         | 6am to 9am      |
-    | Weekday afternoon peak       | 5pm to 8pm      |
-    | Weekend/holiday morning peak | 11am to 2pm     |
-    | Weekend/holiday evening peak | 4pm to 7pm      |
+    | Peak hour period             | Bus tap on time  | What it Means (Likely)                                            |
+    |-----------------|----------------|---------------------------------------|
+    | ***Weekday morning peak***   | ***6am to 9am*** | ***Going to work and school (our data will be focused on this)*** |
+    | Weekday afternoon peak       | 5pm to 8pm       | Returning home from work or school                                |
+    | Weekend/holiday morning peak | 11am to 2pm      | Heading out for retail shopping, attractions etc                  |
+    | Weekend/holiday evening peak | 4pm to 7pm       | Returning home for Mon Blues                                      |
 
 -   Display the O-D flows of the passenger trips by using appropriate geovisualisation methods (not more than 5 maps).
 
@@ -89,7 +89,8 @@ The specific tasks of this take-home exercise are as follows:
 ```{r}
 pacman::p_load(tmap, sf, sp, DT,
                performance, reshape2,
-               ggpubr, tidyverse, stplanr)
+               ggpubr, tidyverse, stplanr, jsonlite)
+
 ```
 
 ## Preparing the Flow Data
@@ -98,12 +99,15 @@ pacman::p_load(tmap, sf, sp, DT,
 ## Importing the OD Data
 
 ```{r}
+#|eval: false
+
 odbus <- read_csv("data/aspatial/origin_destination_bus_202310.csv")
 ```
 
 ## Extracting the Data according to the Weekday AM period
 
 ```{r}
+#|eval: false
 odbus6_9 <- odbus %>%
   filter(DAY_TYPE == "WEEKDAY") %>%
   filter(TIME_PER_HOUR >= 6 &
@@ -118,6 +122,7 @@ odbus6_9 <- odbus %>%
 ## Working with Geospatial Data
 
 ```{r}
+#|eval: false
 busstops = st_read(dsn = "data/geospatial", 
                layer = "BusStop") %>%
   st_transform (crs = 3414)
@@ -128,6 +133,7 @@ busstops = st_read(dsn = "data/geospatial",
 Create analytical hexagon data of 325m (this distance is the perpendicular distance between the centre of the hexagon and its edges) - so should be **c(750, 750)**.
 
 ```{r}
+#|eval: false
 hexagon_grid = st_make_grid(busstops, c(750, 750), what = "polygons", square = FALSE)
 
 hexagon_grid_sf = st_sf(hexagon_grid) %>%
@@ -137,6 +143,7 @@ hexagon_grid_sf = st_sf(hexagon_grid) %>%
 ## Combine with Hexagon Grid
 
 ```{r}
+#|eval: false
 hexagon_grid_sf$n_busstops = lengths(st_intersects(hexagon_grid_sf, busstops))
 
 hexagon_busstop = filter(hexagon_grid_sf, n_busstops > 0)
@@ -152,7 +159,7 @@ busstop_grid <- st_intersection(busstops, hexagon_grid_sf)%>%
 ## Appending Data and Checking
 
 ```{r}
-
+#|eval: false
 od_data_wdam <- left_join(odbus6_9 , busstop_grid,
             by = c("ORIGIN_PT_CODE" = "BUS_STOP_N")) %>%
   rename(ORIGIN_BS = ORIGIN_PT_CODE,
@@ -161,6 +168,7 @@ od_data_wdam <- left_join(odbus6_9 , busstop_grid,
 ```
 
 ```{r}
+#|eval: false
 duplicate <- od_data_wdam %>%
   group_by_all() %>%
   filter(n()>1) %>%
@@ -168,11 +176,13 @@ duplicate <- od_data_wdam %>%
 ```
 
 ```{r}
+#|eval: false
 od_data_wdam <- unique(od_data_wdam)
 
 ```
 
 ```{r}
+#|eval: false
 od_data_wdam <- left_join(od_data_wdam , busstop_grid,
             by = c("DESTIN_BS" = "BUS_STOP_N")) 
 
@@ -188,35 +198,65 @@ od_data_wdam <- od_data_wdam %>%
   drop_na() %>%
   group_by(ORIGIN_Grid, DESTIN_Grid) %>%
   summarise(MORNING_PEAK = sum(TRIPS))
+
+#Removing Intra-Grid Flow
+od_wdam_cleaned <- od_data_wdam[od_data_wdam$ORIGIN_Grid!=od_data_wdam$DESTIN_Grid,]
 ```
 :::
 
-Why choose Weekday AM - travel to work and study
-
--   the data is limited also in a sense, technically we need to know which days etc, e.g. between fri and thurs etc
-
-# Visualising the Spatial Interaction
-
-## Removing Intra-Grid Flow
+## Write/Read Data into rds for Subsequent Usage
 
 ```{r}
-od_data1 <- od_data_wdam[od_data_wdam$ORIGIN_Grid!=od_data_wdam$DESTIN_Grid,]
+#| code-fold: true
+write_rds(hexagon_busstop, "data/rds/hexagon_busstop.rds")
+
+write_rds(od_wdam_cleaned, "data/rds/od_wdam_cleaned.rds")
+
+write_rds(hexagon_grid_sf, "data/rds/hexagon_grid_sf.rds")
 ```
+
+```{r}
+#| code-fold: true
+
+hexagon_bustops <- read_rds("data/rds/hexagon_busstop.rds")
+
+od_wdam_cleaned <- read_rds("data/rds/od_wdam_cleaned.rds")
+
+hexagon_grid_sf <- read_rds("data/rds/hexagon_grid_sf.rds")
+
+schools_sf <- read_rds("data/rds/schools_sf.rds")
+
+mpsz <- read_rds("data/rds/mpsz.rds")
+
+```
+
+# Visualising the Spatial Interaction
 
 ## Creating Desire Lines
 
 ```{r}
-flowLine <- od2line(flow = od_data1, 
+flowLine <- od2line(flow = od_wdam_cleaned, 
                     zones = hexagon_grid_sf,
                     zone_code = "grid_id")
 ```
 
 ```{r}
-tmap_mode("view")
 
-tm_shape(hexagon_busstop) +
-  tm_borders() +
-  tm_polygons() +
+tmap_options(check.and.fix = TRUE)
+tmap_mode("plot")
+
+tm_shape(mpsz) +
+  tm_polygons(col = "lightblue", alpha = 0.5) +
+  tm_layout(main.title = "Spatial Flow for Passengers by Bus on Weekdays Morning",
+            main.title.position = "center",
+            main.title.size = 1.0,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2, labels.show = FALSE)+
+tm_shape(hexagon_bustops) +
+  tm_polygons(alpha = 0.3) +
 flowLine %>%  
   filter(MORNING_PEAK >= 5000) %>%
 tm_shape() +
@@ -224,6 +264,7 @@ tm_shape() +
            style = "quantile",
            scale = c(0.1, 1, 3, 5, 7, 10),
            n = 6,
+           col = "blue",
            alpha = 0.3)
 ```
 
@@ -231,20 +272,636 @@ tm_shape() +
 
 ## Spatial Patterns
 
-## Propulsive and Attractiveness Variables
+## Attractiveness Variables
+
+We will compile three attractiveness variables, namely:
+
+-   Schools (their place of study)
+
+-   Business (their place of work)
+
+-   F&B (to buy breakfast before heading to their final destination, assuming that they will buy food nearer to their location)
+
+### Preparing the School Data (using data from In Class Ex 4)
+
+```{r}
+#| eval: false
+
+hexagon_bustops$SCHOOL_COUNT <- lengths(
+  st_intersects(
+    hexagon_bustops, schools_sf))
+```
+
+```{r}
+#| eval: false
+
+sum(hexagon_bustops$SCHOOL_COUNT)
+```
+
+### Preparing the Business Data
+
+We assume that the businesses equate to the companies etc that people will travel to for their work.
+
+```{r}
+#| eval: false
+
+business_sf <- st_read(dsn = "data/geospatial", 
+               layer = "Business")
+
+write_rds (business_sf, "data/rds/business_sf.rds")
+```
+
+```{r}
+#| eval: false
+
+hexagon_bustops$BIZ_COUNT <- lengths(
+  st_intersects(
+    hexagon_bustops, business_sf))
+```
+
+### Preparing the F&B Data
+
+```{r}
+#| eval: false
+
+food_sf <- st_read(dsn = "data/geospatial", 
+               layer = "F&B") %>%
+  st_transform (crs=3414)
+
+write_rds (food_sf, "data/rds/food_sf.rds")
+```
+
+```{r}
+#| eval: false
+
+hexagon_bustops$FOOD_COUNT <- lengths(
+  st_intersects(hexagon_bustops, food_sf))
+```
+
+## Propulsive Variables
+
+We will look at three propulsive variables, namely:
+
+-   Number of Population
+
+-   Number of Train Stations Exits
+
+-   Number of Bus Stops (already available since Take Home Ex 1)
+
+-   Location of Pre Schools (assuming parents will bring their child to the nearest pre-school which should be within walking distance, before going to the nearest bus stop to travel for work)
+
+-   Number of Buses available within each grid - tried to obtain the bus route data from LTA Data Mall, but there data seems limited and outdated (no actual date on when it was last updated); so decided not to pursue this.
+
+### Preparing the Data on Populace
+
+We utilise the hdb data provided by Prof.
+
+```{r}
+#| eval: false
+hdb <- read_csv ("data/aspatial/hdb.csv")
+```
+
+Based on the data, we will be able to intersect the locations, types of dwellings (whether 1-room, 2-room, rental and etc) to have an estimate on the number of population in each grid.
+
+So based on past studies in 2018:
+
+| Types of Dwelling | Average Household Size | Remarks |
+|-------------------|------------------------|---------|
+| 1-Room / Rental   | 2.3                    |         |
+| 2-Room            | 2.19                   |         |
+| 3-Room            | 2.63                   |         |
+| 4-Room            | 3.42                   |         |
+| 5-Room / Exec     | 3.77                   |         |
+
+```{r}
+#| eval: false
+hdb_tidy <- hdb %>%
+  select(13:25, "lat", "lng") %>%
+  mutate(one_Rm = (`1room_sold` + `1room_rental` + studio_apartment_sold + other_room_rental)*2.3) %>%
+  mutate(two_Rm = (`2room_sold` + `2room_rental`)*2.19) %>%
+  mutate(three_Rm = (`3room_sold` + `3room_rental`)*2.63) %>%
+  mutate(four_Rm = (`4room_sold`) * 3.42) %>%
+  mutate(five_rm = (`5room_sold` + `exec_sold` + multigen_sold)*3.77)
+```
+
+```{r}
+#| eval: false
+hdb_tidy <- hdb_tidy %>%
+  select (14:20) %>%
+  mutate (pop = one_Rm + two_Rm + three_Rm + four_Rm + five_rm)
+```
+
+Covert to sf data.
+
+```{r}
+#| eval: false
+hdb_sf <- st_as_sf(hdb_tidy,
+                      coords = c("lng", "lat"),
+                      crs = 4326) %>%
+  st_transform (crs=3414)
+
+write_rds (hdb_sf, "data/rds/hdb_sf.rds")
+```
+
+```{r}
+#| eval: false
+hexagon_bustops$POP <- sapply(
+  st_intersects(hexagon_bustops, hdb_sf),
+  function(indices) sum(hdb_sf$pop[indices])
+)
+```
+
+### Train Station Exit
+
+I think that the train station exits can be considered as both propulsive and attractive, e.g. people will take buses to the nearest train station exit, then take on the mrt to their next destination.
+
+But they can also exit from the train station, then proceed to take bus to their place of work or study.
+
+I downloaded the static shp file of the train station exits from LTADataMall.
+
+```{r}
+#| eval: false
+train_exits_sf <- st_read(dsn = "data/geospatial", 
+               layer = "Train_Station_Exit_Layer") %>%
+  st_transform (crs=3414)
+```
+
+```{r}
+#| eval: false
+write_rds (train_exits_sf, "data/rds/train_exits_sf.rds")
+```
+
+```{r}
+#| eval: false
+hexagon_bustops$TRAIN_EXITS_COUNT <- lengths(
+  st_intersects(
+    hexagon_bustops, train_exits_sf))
+```
+
+### Location of Pre-Schools
+
+Using the Onemap API, I gain access to the "Child Care Services" theme.
+
+This is updated by ECDA in Dec 23 and i saved it in JSON format.
+
+I will use the `jsonlite` package to convert the data.
+
+```{r}
+#| eval: false
+childcare <- fromJSON("data/aspatial/childcare.json", flatten = TRUE)
+```
+
+```{r}
+#| eval: false
+childcare_tidy <- childcare %>%
+  select(9:14) %>%
+  slice(-1) %>%
+  separate(col = SrchResults.LatLng, into = c("lat", "long"), sep = ",", convert = TRUE)
+```
+
+```{r}
+#| eval: false
+
+childcare_sf <- st_as_sf(childcare_tidy,
+                      coords = c("long", "lat"),
+                      crs = 4326) %>%
+  st_transform (crs=3414)
+
+write_rds (childcare_sf, "data/rds/childcare_sf.rds")
+```
+
+```{r}
+#| eval: false
+
+hexagon_bustops$CHILDCARE_COUNT <- lengths(
+  st_intersects(
+    hexagon_bustops, childcare_sf))
+```
+
+All the data were combined and written into an rds file.
+
+```{r}
+#| eval: false
+write_rds (hexagon_bustops, "data/rds/combined_data.rds")
+```
+
+```{r}
+combined_data <- read_rds("data/rds/combined_data.rds")
+```
 
 # Spatial Interaction Modelling
 
 ## Computing the Distance Matrix
 
-## Preparing the Data
+```{r}
+#| eval: false  
 
-Use train station or the train station exit point - I think its the exit point
+hexa_sp <- as(hexagon_busstop,"Spatial")  
+hexa_sp
+```
 
-School locations can be attractiveness factors - especially since i look at the weekdays morning peak period - school going students
+```{r}
+#| eval: false 
 
-Where to get the data and how to import with the hexagon layer
+dist <- spDists(hexa_sp,                  
+                longlat = FALSE) #latlong is FALSE cuz its is in Svy21 alr  
+head(dist, n=c(10, 10))
+```
 
-HDB property information - types of hdb properties, total dwelling units - to find out the number of households to peg into the hexagon unit, as a proxy to estimate the population, 80% of the population stays in HDB (Not including Condo, Private, Landed) - unlikely that they take public transport? Need to convert the lat-long to geometry data
+```{r}
+#| eval: false 
+hexa_id <- hexagon_busstop$grid_id
+```
 
-if we want to have a more accurate proxy - we can go by the type of the hbb flat (1 room, 2 room, 3 room) - multiply by the typical size
+```{r}
+#| eval: false 
+colnames(dist) <- paste0(hexa_id) rownames(dist) <- paste0(hexa_id)
+```
+
+```{r}
+#| eval: false 
+distPair <- melt(dist) %>%   rename(dist = value) head(distPair, 10)
+```
+
+```{r}
+#| eval: false 
+
+distPair$dist <- ifelse(distPair$dist == 0,                         
+                        50, distPair$dist)
+```
+
+```{r}
+#| eval: false 
+distPair <- distPair %>%   rename(orig = Var1,          
+                                  dest = Var2)
+```
+
+```{r}
+#| eval: false 
+write_rds(distPair, "data/rds/distPair.rds") 
+```
+
+```{r}
+distPair <- read_rds("data/rds/distPair.rds")
+```
+
+## Preparing the Flow Data
+
+### Grouping the Flow Data
+
+```{r}
+flow_data <- od_wdam_cleaned %>%
+  group_by(ORIGIN_Grid, DESTIN_Grid) %>% 
+  summarize(TRIPS = sum(MORNING_PEAK)) 
+```
+
+```{r}
+flow_data <- od2line(flow = flow_data, 
+                    zones = hexagon_grid_sf,
+                    zone_code = "grid_id")
+```
+
+### Separating the Intra-Flow Data
+
+```{r}
+flow_data$FlowNoIntra <- ifelse(
+  flow_data$ORIGIN_Grid == flow_data$DESTIN_Grid, 
+  0, flow_data$TRIPS)
+flow_data$offset <- ifelse(
+  flow_data$ORIGIN_Grid == flow_data$DESTIN_Grid, 
+  0.000001, 1)
+```
+
+### Combining Passenger Volume Data with Dist Data
+
+```{r}
+flow_data1 <- flow_data %>%
+  left_join (distPair,
+             by = c("ORIGIN_Grid" = "orig",
+                    "DESTIN_Grid" = "dest"))
+```
+
+### Combining the Data with Propulsive and Attractive Variables Data
+
+```{r}
+#| eval: false
+combined_tidy <- combined_data %>%
+  st_drop_geometry()
+```
+
+```{r}
+#| eval: false
+combined_tidy$DESTIN_TRAIN_EXITS <- combined_tidy$TRAIN_EXITS_COUNT
+```
+
+```{r}
+#| eval: false
+flow_data_tidy <- flow_data1 %>%
+  left_join(
+    combined_tidy %>% 
+      select(grid_id, SCHOOL_COUNT, BIZ_COUNT, FOOD_COUNT, DESTIN_TRAIN_EXITS),
+      by = c("DESTIN_Grid" = "grid_id")
+  ) %>%
+  rename(DIST = dist)
+```
+
+```{r}
+#| eval: false
+
+flow_data_tidy <- flow_data_tidy %>%
+  left_join(
+    combined_tidy %>% 
+      select(grid_id, POP, TRAIN_EXITS_COUNT, CHILDCARE_COUNT, n_busstops),
+      by = c("ORIGIN_Grid" = "grid_id")
+  ) 
+```
+
+Ensure variables with value = 0 are adjusted to 0.99.
+
+```{r}
+#| eval: false
+
+flow_data_tidy$SCHOOL_COUNT <- ifelse(
+  flow_data_tidy$SCHOOL_COUNT == 0,
+  0.99, flow_data_tidy$SCHOOL_COUNT)
+
+flow_data_tidy$BIZ_COUNT <- ifelse(
+  flow_data_tidy$BIZ_COUNT == 0,
+  0.99, flow_data_tidy$BIZ_COUNT)
+
+flow_data_tidy$FOOD_COUNT <- ifelse(
+  flow_data_tidy$FOOD_COUNT == 0,
+  0.99, flow_data_tidy$FOOD_COUNT)
+
+flow_data_tidy$TRAIN_EXITS_COUNT <- ifelse(
+  flow_data_tidy$TRAIN_EXITS_COUNT == 0,
+  0.99, flow_data_tidy$TRAIN_EXITS_COUNT)
+
+flow_data_tidy$DESTIN_TRAIN_EXITS <- ifelse(
+  flow_data_tidy$DESTIN_TRAIN_EXITS == 0,
+  0.99, flow_data_tidy$DESTIN_TRAIN_EXITS)
+
+flow_data_tidy$POP <- ifelse(
+  flow_data_tidy$POP == 0,
+  0.99, flow_data_tidy$POP)
+
+flow_data_tidy$CHILDCARE_COUNT <- ifelse(
+  flow_data_tidy$CHILDCARE_COUNT == 0,
+  0.99, flow_data_tidy$CHILDCARE_COUNT)
+
+```
+
+```{r}
+#| eval: false
+write_rds (flow_data_tidy, "data/rds/flow_data_tidy.rds")
+```
+
+# Calibrating Spatial Interaction Models
+
+```{r}
+flow_data_tidy <- read_rds ("data/rds/flow_data_tidy.rds")
+```
+
+We will calibrate separate Spatial Interaction Models for inter- and intra-zonal flows. For the Ex, we will focus our attention on inter-zonal flow. Hence, we need to exclude the intra-zonal flow from *flow_data*.
+
+First, two new columns called *FlowNoIntra* and *offset* will be created by using the code chunk below.
+
+```{r}
+flow_data_tidy$FlowNoIntra <- ifelse(
+  flow_data_tidy$ORIGIN_Grid == flow_data_tidy$DESTIN_Grid, 
+  0, flow_data_tidy$TRIPS)
+
+flow_data_tidy$offset <- ifelse(
+  flow_data_tidy$ORIGIN_Grid == flow_data_tidy$DESTIN_Grid, 
+  0.000001, 1)
+```
+
+According to the syntax used to derive values in *FlowNoIntra* field, all intra-zonal flow will be given a value of 0 or else the original flow values will be inserted.
+
+Next, inter-zonal flow will be selected from flow_data and save into a new output data.frame called *inter_zonal_flow* by using the code chunk below.
+
+```{r}
+inter_zonal_flow <- flow_data_tidy %>%
+  filter(FlowNoIntra > 0) %>%
+  mutate(ORIGIN_Grid = as.factor(ORIGIN_Grid)) %>%
+  mutate(DESTIN_Grid = as.factor(DESTIN_Grid)) 
+```
+
+## Unconstrained Spatial Interaction Model 
+
+```{r}
+#| eval: false
+uncSIM <- glm(formula = TRIPS ~ 
+                log(SCHOOL_COUNT) +
+                log(BIZ_COUNT) +
+                log(FOOD_COUNT) +
+                log(POP) +
+                log(TRAIN_EXITS_COUNT) +
+                log(DESTIN_TRAIN_EXITS) +
+                log(CHILDCARE_COUNT) +
+                log(n_busstops) +
+                log(DIST),
+              family = poisson(link = "log"),
+              data = inter_zonal_flow,
+              na.action = na.exclude)
+
+write_rds(uncSIM, "data/rds/uncSIM.rds")
+
+```
+
+```{r}
+
+uncSIM <- read_rds("data/rds/uncSIM.rds")
+```
+
+```{r}
+#| eval: false
+summary(uncSIM)
+```
+
+## Origin - Constrained Model
+
+::: callout-note
+-   For origin-constrained model, only explanatory variables representing the attractiveness at the destinations will be used.
+
+-   All the explanatory variables including distance will be log transformed.
+
+-   *ORIGIN_Grid* is used to model 𝜇~𝑖~ . It must be in categorical data type.
+
+-   It is important to note that -1 is added in the equation after the distance variable. The -1 serves the purpose of removing the intercept that by default, glm will insert into the model.
+:::
+
+```{r}
+#| eval: false
+orcSIM_Poisson <- glm(formula = TRIPS ~ 
+                ORIGIN_Grid +
+                log(SCHOOL_COUNT) +
+                log(BIZ_COUNT) +
+                log(FOOD_COUNT) +
+                log(DESTIN_TRAIN_EXITS) +
+                log(DIST) - 1,
+              family = poisson(link = "log"),
+              data = inter_zonal_flow,
+              na.action = na.exclude)
+
+write_rds(orcSIM_Poisson, "data/rds/orcSIM_Poisson.rds")
+```
+
+```{r}
+
+orcSIM_Poisson <- read_rds("data/rds/orcSIM_Poisson.rds")
+```
+
+```{r}
+#| eval: false
+tail(summary(orcSIM_Poisson)$coefficients, n = 10)
+```
+
+## Destination Constrained Model
+
+Look at the propulsive variables.
+
+```{r}
+#| eval: false
+decSIM <- glm(formula = TRIPS ~ 
+                DESTIN_Grid +
+                log(POP) +
+                log(CHILDCARE_COUNT) +
+                log(TRAIN_EXITS_COUNT) +
+                log(n_busstops) +
+                log(DIST) - 1,
+              family = poisson(link = "log"),
+              data = inter_zonal_flow,
+              na.action = na.exclude)
+
+write_rds(decSIM, "data/rds/decSIM.rds")
+```
+
+```{r}
+
+decSIM <- read_rds("data/rds/decSIM.rds")
+```
+
+## Doubly Constrained Model 
+
+```{r}
+#| eval: false
+dbcSIM <- glm(formula = TRIPS ~ 
+                ORIGIN_Grid + 
+                DESTIN_Grid + 
+                log(DIST),
+              family = poisson(link = "log"),
+              data = inter_zonal_flow,
+              na.action = na.exclude)
+
+```
+
+```{r}
+#| eval: false
+write_rds (dbcSIM, "data/rds/dbcSIM.rds")
+```
+
+```{r}
+
+dbcSIM <- read_rds("data/rds/dbcSIM.rds")
+```
+
+## Model Comparisons
+
+We will use [`compare_performance()`](https://easystats.github.io/performance/reference/compare_performance.html) of [**performance**](https://easystats.github.io/performance/) package.
+
+First of all, let us create a list called *model_list* by using the code chunk below.
+
+```{r}
+model_list <- list(unconstrained=uncSIM,
+                   originConstrained=orcSIM_Poisson,
+                   destinationConstrained=decSIM,
+                   doublyConstrained=dbcSIM)
+```
+
+Next, we will compute the RMSE of all the models in *model_list* file by using the code chunk below.
+
+```{r}
+compare_performance(model_list,
+                    metrics = "RMSE")
+```
+
+## Visualising the Fitted Values
+
+```{r}
+df <- as.data.frame(uncSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- inter_zonal_flow %>%
+  cbind(df) %>%
+  rename(uncTRIPS = "uncSIM.fitted.values")
+```
+
+```{r}
+df <- as.data.frame(orcSIM_Poisson$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(orcTRIPS = "orcSIM_Poisson.fitted.values")
+```
+
+```{r}
+df <- as.data.frame(decSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(decTRIPS = "decSIM.fitted.values")
+```
+
+```{r}
+df <- as.data.frame(dbcSIM$fitted.values) %>%
+  round(digits = 0)
+```
+
+```{r}
+SIM_data <- SIM_data %>%
+  cbind(df) %>%
+  rename(dbcTRIPS = "dbcSIM.fitted.values")
+```
+
+```{r}
+write_rds(SIM_data, "data/rds/SIM_data.rds")
+```
+
+```{r}
+unc_p <- ggplot(data = SIM_data,
+                aes(x = uncTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+orc_p <- ggplot(data = SIM_data,
+                aes(x = orcTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+dec_p <- ggplot(data = SIM_data,
+                aes(x = decTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+dbc_p <- ggplot(data = SIM_data,
+                aes(x = dbcTRIPS,
+                    y = TRIPS)) +
+  geom_point() +
+  geom_smooth(method = lm)
+
+ggarrange(unc_p, orc_p, dec_p, dbc_p,
+          ncol = 2,
+          nrow = 2)
+```
