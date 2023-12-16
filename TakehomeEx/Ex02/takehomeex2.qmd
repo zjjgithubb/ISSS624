@@ -60,7 +60,7 @@ The specific tasks of this take-home exercise are as follows:
 -   With reference to the time intervals provided in the table below, construct an O-D matrix of commuter flows for a time interval of your choice by integrating *Passenger Volume by Origin Destination Bus Stops* and *Bus Stop Location* from [LTA DataMall](https://datamall.lta.gov.sg/content/datamall/en.html). The O-D matrix must be aggregated at the analytics hexagon level
 
     | Peak hour period             | Bus tap on time  | What it Means (Likely)                                            |
-    |-----------------|----------------|---------------------------------------|
+    |------------------------------|------------------|-------------------------------------------------------------------|
     | ***Weekday morning peak***   | ***6am to 9am*** | ***Going to work and school (our data will be focused on this)*** |
     | Weekday afternoon peak       | 5pm to 8pm       | Returning home from work or school                                |
     | Weekend/holiday morning peak | 11am to 2pm      | Heading out for retail shopping, attractions etc                  |
@@ -228,6 +228,8 @@ schools_sf <- read_rds("data/rds/schools_sf.rds")
 
 mpsz <- read_rds("data/rds/mpsz.rds")
 
+flow_data_tidy <- read_rds("data/rds/flow_data_tidy.rds")
+
 ```
 
 # Visualising the Spatial Interaction
@@ -241,12 +243,12 @@ flowLine <- od2line(flow = od_wdam_cleaned,
 ```
 
 ```{r}
-
+#| code-fold: true
 tmap_options(check.and.fix = TRUE)
 tmap_mode("plot")
 
 tm_shape(mpsz) +
-  tm_polygons(col = "lightblue", alpha = 0.5) +
+  tm_polygons(col = "black", alpha = 0.5) +
   tm_layout(main.title = "Spatial Flow for Passengers by Bus on Weekdays Morning",
             main.title.position = "center",
             main.title.size = 1.0,
@@ -256,21 +258,58 @@ tm_shape(mpsz) +
   tm_scale_bar() +
   tm_grid(alpha =0.2, labels.show = FALSE)+
 tm_shape(hexagon_bustops) +
-  tm_polygons(alpha = 0.3) +
-flowLine %>%  
-  filter(MORNING_PEAK >= 5000) %>%
+  tm_polygons(alpha = 0.3, col = "lightblue") +
+flow_data_tidy %>%  
+  filter(TRIPS >= 5000) %>%
 tm_shape() +
-  tm_lines(lwd = "MORNING_PEAK",
+  tm_lines(lwd = "TRIPS",
            style = "quantile",
            scale = c(0.1, 1, 3, 5, 7, 10),
            n = 6,
-           col = "blue",
-           alpha = 0.3)
+           col = "yellow",
+           alpha = 0.5)
 ```
 
-# Analysis
+```{r}
 
-## Spatial Patterns
+#| code-fold: true
+tmap_options(check.and.fix = TRUE)
+tmap_mode("plot")
+
+tm_shape(mpsz) +
+  tm_polygons(col = "black", alpha = 0.5) +
+  tm_layout(main.title = "Spatial Flow for Passengers by Bus on Weekdays Morning, Dist > 10km",
+            main.title.position = "center",
+            main.title.size = 1.0,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2, labels.show = FALSE)+
+tm_shape(hexagon_bustops) +
+  tm_polygons(alpha = 0.3, col = "lightblue") +
+flow_data_tidy %>%  
+  filter(TRIPS>=5000, DIST >= 10000) %>%
+tm_shape() +
+  tm_lines(lwd = "TRIPS",
+           style = "quantile",
+           scale = c(0.1, 1, 3, 5, 7, 10),
+           n = 6,
+           col = "yellow",
+           alpha = 0.5)
+```
+
+# Analysis of Spatial Flow
+
+From the spatial flow, it seems that there are a few identified areas where people are taking buses to during the morning peak period:
+
+-   Travelling from Malaysia to Singapore through the Causeway - which accounts for a very high number. And it seems they will make their way towards Woodlands and branch out from that region.
+
+-   Other regions include areas like Yishun, Tampines, Jurong, Boon Lay.
+
+-   There are some long distances travel between Woodlands towards Changi, i.e. from the North to the Eastern Part of Singapore. This is probably due to a lack of direct MRT Lines, and that the Buses travelling on the Expressway would provide a speedier route.
+
+# Spatial Patterns
 
 ## Attractiveness Variables
 
@@ -403,6 +442,32 @@ hdb_sf <- st_as_sf(hdb_tidy,
 write_rds (hdb_sf, "data/rds/hdb_sf.rds")
 ```
 
+Plotting the data onto tmap to get a sense of where the hdb locations are. It seems to be near the typical hub and transport nodes from earlier maps.
+
+```{r}
+hdb_sf <- read_rds("data/rds/hdb_sf.rds")
+```
+
+```{r}
+#| code-fold: true
+tmap_options(check.and.fix = TRUE)
+tmap_mode("plot")
+
+tm_shape(mpsz) +
+  tm_polygons(col = "black", alpha = 0.5) +
+  tm_layout(main.title = "Population Data",
+            main.title.position = "center",
+            main.title.size = 1.0,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2, labels.show = FALSE)+
+tm_shape(hdb_sf) +
+  tm_dots(alpha = 0.3, col = "lightblue")
+
+```
+
 ```{r}
 #| eval: false
 hexagon_bustops$POP <- sapply(
@@ -487,6 +552,36 @@ write_rds (hexagon_bustops, "data/rds/combined_data.rds")
 
 ```{r}
 combined_data <- read_rds("data/rds/combined_data.rds")
+```
+
+# Visualising the Flow with the Variables
+
+```{r}
+tmap_options(check.and.fix = TRUE)
+tmap_mode("plot")
+
+tm_shape(mpsz) +
+  tm_polygons(col = "black", alpha = 0.5) +
+  tm_layout(main.title = "Spatial Flow for Passengers by Bus on Weekdays Morning",
+            main.title.position = "center",
+            main.title.size = 1.0,
+            frame = TRUE) +
+  tm_borders(alpha = 0.5) +
+  tm_compass(type="8star", size = 2) +
+  tm_scale_bar() +
+  tm_grid(alpha =0.2, labels.show = FALSE)+
+tm_shape(combined_data[combined_data$SCHOOL_COUNT > 1, ]) +
+  tm_borders() +
+    tm_fill("SCHOOL_COUNT", alpha = 0.3) +
+flow_data_tidy %>%  
+  filter(TRIPS>=5000) %>%
+tm_shape() +
+  tm_lines(lwd = "TRIPS",
+           style = "quantile",
+           scale = c(0.1, 1, 3, 5, 7, 10),
+           n = 6,
+           col = "yellow",
+           alpha = 0.5)
 ```
 
 # Spatial Interaction Modelling
@@ -687,7 +782,21 @@ inter_zonal_flow <- flow_data_tidy %>%
   mutate(DESTIN_Grid = as.factor(DESTIN_Grid)) 
 ```
 
-## Unconstrained Spatial Interaction Model 
+## Basic Plot of the Inter Zonal Flow Data
+
+```{r}
+ggplot(data = inter_zonal_flow,
+       aes(x = TRIPS)) +
+  geom_histogram(color='black',size= 0.3, fill = '#DD8888') +
+  labs(y= 'Count of TRIPS', x='TRIPS') +
+  theme(axis.title.y=element_text(angle = 0),
+        plot.title = element_text(face="bold")) +
+  ggtitle('Distribution of TRIPS')
+```
+
+It seems to suggest that we should use a **Poisson Regression Model**.
+
+## Unconstrained Spatial Interaction Model
 
 ```{r}
 #| eval: false
@@ -718,6 +827,12 @@ uncSIM <- read_rds("data/rds/uncSIM.rds")
 #| eval: false
 summary(uncSIM)
 ```
+
+```{r}
+uncSIM$coefficients
+```
+
+Based on the results, all the coefficients are statistically significant. The most influential explanatory variables are *distance*, *destination train exit count* and *origin number of bus stops* with coefficients of -1.43, 0.73 and 0.29 respectively.
 
 ## Origin - Constrained Model
 
@@ -757,6 +872,8 @@ orcSIM_Poisson <- read_rds("data/rds/orcSIM_Poisson.rds")
 tail(summary(orcSIM_Poisson)$coefficients, n = 10)
 ```
 
+Based on the results, all of the coefficients are statistically significant. The most influential explanatory variables are *distance*, *destination train exit count* and *destination school count* with coefficients of -1.5, 0.8 and 0.22 respectively.
+
 ## Destination Constrained Model
 
 Look at the propulsive variables.
@@ -782,7 +899,13 @@ write_rds(decSIM, "data/rds/decSIM.rds")
 decSIM <- read_rds("data/rds/decSIM.rds")
 ```
 
-## Doubly Constrained Model 
+```{r}
+tail(summary(decSIM)$coefficients, n = 10)
+```
+
+Based on the results, all of the coefficients are statistically significant. The most influential explanatory variables are *distance*, *origin number of bus stops* and *origin train exit count* with coefficients of -1.48, 0.29 and 0.285 respectively.
+
+## Doubly Constrained Model
 
 ```{r}
 #| eval: false
@@ -806,7 +929,13 @@ write_rds (dbcSIM, "data/rds/dbcSIM.rds")
 dbcSIM <- read_rds("data/rds/dbcSIM.rds")
 ```
 
-## Model Comparisons
+```{r}
+tail(summary(dbcSIM)$coefficients, n = 10)
+```
+
+The variable *distance* is statistically significant.
+
+# Model Comparisons
 
 We will use [`compare_performance()`](https://easystats.github.io/performance/reference/compare_performance.html) of [**performance**](https://easystats.github.io/performance/) package.
 
@@ -825,6 +954,31 @@ Next, we will compute the RMSE of all the models in *model_list* file by using
 compare_performance(model_list,
                     metrics = "RMSE")
 ```
+
+## Goodness of Fit - Calculating RSquared Statistics
+
+```{r}
+CalcRSquared <- function(observed, estimated){
+  r <- cor(observed, estimated)
+  R2 <- r^2
+  R2
+}
+```
+
+```{r}
+
+r_squared_values <- lapply(model_list, function(model) {
+  observed_values <- model$data$TRIPS
+  fitted_values <- model$fitted.values
+  CalcRSquared(observed_values, fitted_values)
+})
+
+# Print the R-squared values for each model
+print(r_squared_values)
+
+```
+
+It seems that the Doubly Constrained Model is the best fitted across the four models, as compared to the other three. the RMSE of the Doubly Constrained Model is also the lowest.
 
 ## Visualising the Fitted Values
 
@@ -905,3 +1059,106 @@ ggarrange(unc_p, orc_p, dec_p, dbc_p,
           ncol = 2,
           nrow = 2)
 ```
+
+From the graphs - I noticed that there is a certain outlier in the data. I will try to identify that data and remove it. Thereafter, to rerun the Doubly Constrained Model to see if there is an improvement.
+
+## Removing Outliers
+
+```{r}
+# Get model residuals
+residuals <- residuals(dbcSIM)
+
+# Plot residuals
+plot(residuals)
+
+```
+
+Based on the data - there seems to be a point where the number of trips is presumably a lot higher than the rest. Using the follow code chunk to find out.
+
+```{r}
+# Assuming 'df' is your dataframe and 'columnName' is the column of interest
+result <- subset(SIM_data, decTRIPS > 90000)
+
+# Print the result
+print(result)
+
+```
+
+From the results - this is a travel between Grid 984 to 983. Which I suspect is the link between the Causeway. This data point is unique in the sense that it depicts cross-country travel between Malaysia and Singapore. Confirmed this using the tmap_plot to check.
+
+```{r}
+tmap_mode("view")
+
+tm_shape(hexagon_bustops)+
+  tm_polygons(alpha = 0.3)
+```
+
+We will remove the data from flow_data_tidy and refit the Doubly Constrained Model.
+
+```{r}
+
+# Define the values to be removed
+remove_values <- c(ORIGIN_Grid = 984, DESTIN_Grid = 983)
+
+# Remove the row with specified values
+inter_zonal_flow_cleaned <- inter_zonal_flow %>%
+  filter(ORIGIN_Grid != remove_values["ORIGIN_Grid"] | DESTIN_Grid != remove_values["DESTIN_Grid"])
+
+```
+
+```{r}
+#| eval: false
+
+dbcSIM1 <- glm(formula = TRIPS ~ 
+                ORIGIN_Grid + 
+                DESTIN_Grid + 
+                log(DIST),
+              family = poisson(link = "log"),
+              data = inter_zonal_flow_cleaned,
+              na.action = na.exclude)
+
+
+```
+
+```{r}
+#| eval: false
+
+write_rds(dbcSIM1, "data/rds/dbcSIM1.rds")
+```
+
+```{r}
+dbcSIM1 <- read_rds("data/rds/dbcSIM1.rds")
+```
+
+## Checking the Goodness of Fit for refitted Model
+
+```{r}
+model_list <- list(unconstrained=uncSIM,
+                   originConstrained=orcSIM_Poisson,
+                   destinationConstrained=decSIM,
+                   doublyConstrained=dbcSIM,
+                   doublyConstrainednew=dbcSIM1)
+```
+
+```{r}
+compare_performance(model_list,
+                    metrics = "RMSE")
+```
+
+```{r}
+CalcRSquared(dbcSIM1$data$TRIPS, dbcSIM1$fitted.values)
+```
+
+It seems that the removal of the point caused the model to be worse instead of better.
+
+# Conclusion
+
+I realised that there are some limitations to the Spatial Interaction Models, namely:
+
+-   The models are sensitive to distance - distance seems to be still the most influential factor in predicting the flow.
+
+-   The models ignore the socio-economic factors of the population.
+
+-   The models fail to explain the complex spatial patterns, e.g. accounting for the dependence between the hexagons, i.e. they are not independent.
+
+-   

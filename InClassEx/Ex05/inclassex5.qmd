@@ -1,3 +1,329 @@
 ---
 title: "In Class Ex 5"
+
+date: "16 Dec 23"
+date-modified: "last-modified" 
+
+format: html
+execute: 
+  echo: true
+  eval: true
+  warning: false
+  
+editor: visual 
 ---
+
+# Spatial Econometrics Interaction Modelling
+
+![](Spatialeconometricmodel.png)
+
+Due to the limitations of the Spatial Interaction Models - we will look at the Spatial Econometrics Interaction Model.
+
+Here - we will add on a weight to the SIM that we have previously developed. (Specific for Origin-Destination Flows)
+
+::: callout-note
+This can be applied to beyond just OD flow.
+:::
+
+# Preparation
+
+## Packages
+
+New package that we will be using - [`spflow`](https://cran.r-project.org/web/packages/spflow/index.html). To install the latest version instead of the published one:
+
+```{r}
+
+devtools::install_github("LukeCe/spflow")
+```
+
+```{r}
+pacman::p_load(tmap, sf, spdep, sp, Matrix,
+               reshape2, tidyverse, spflow)
+```
+
+```         
+```
+
+Efficient estimation of spatial econometric models of origin-destination flows, which may exhibit spatial autocorrelation in the dependent variable, the explanatory variables or both. The model is the one proposed by LeSage and Pace (2008), who develop a matrix formulation that exploits the relational structure of flow data. The estimation procedures follow most closely those outlined by Dargel (2021).
+
+## Data
+
+### How the Data was Prepared
+
+To add on later.
+
+### Reading the Data Prepared by Prof
+
+# Preparing the Data for SEIM
+
+mpsz_nb -\> this will give the Weights in the formula
+
+mpsz_flow -\> flow data
+
+Mpsz_var -\> the explanatory variables
+
+```{r}
+mpsz_flow <- read_rds("data/rds/mpsz_flow.rds")
+
+mpsz_nb <- read_rds("data/rds/mpsz_nb.rds")
+
+mpsz_var <- read_rds("data/rds/mpsz_var.rds")
+```
+
+## Creating the spflow_network_class Objects
+
+To describe the nodes of a network the package provides `spflow_network-class` that combines attributes of the nodes with the chosen network structure.
+
+For our model we choose the **contiguity based neighborhood structure**.
+
+*Should not use by distance. Why?*
+
+```{r}
+
+mpsz_net <- spflow_network(
+    id_net = "sg",
+    node_neighborhood = nb2mat(mpsz_nb$by_contiguity),
+    node_data = mpsz_var,
+    node_key_column = "SZ_CODE")
+
+mpsz_net
+```
+
+## Network_Pair_Class Objects
+
+The `spflow_network_pair-class` contains all information on the pairs of nodes belonging to the origin and destination networks.
+
+```{r}
+mpsz_net_pairs <- spflow_network_pair(
+  id_orig_net = "sg",
+  id_dest_net = "sg",
+  pair_data = mpsz_flow,
+  orig_key_column = "ORIGIN_SZ",
+  dest_key_column = "DESTIN_SZ")
+
+mpsz_net_pairs
+```
+
+## Network_Multi-class
+
+The `spflow_network_multi-class` combines information on the nodes and the node-pairs and also ensures that both data sources are consistent. For example, if some of the origins in the `spflow_network_pair-class` are not identified with the nodes in the `spflow_network-class` an error will be raised.
+
+```{r}
+mpsz_multinet <- spflow_network_multi(mpsz_net,mpsz_net_pairs)
+
+mpsz_multinet
+```
+
+## Plotting
+
+Given the information on origins, destinations and OD pairs we can use the [`spflow_map()`](https://lukece.github.io/spflow/reference/spflow_map.html) method for a simple geographic representation of the largest flows.
+
+```{r}
+#| eval: false
+
+plot(mpsz_var$geometry)
+
+spflow_map(
+  mpsz_multinet,
+  flow_var = "TRIPS",
+  add = TRUE,          
+  legend_position = "bottomleft",
+  filter_lowest = .95, 
+  remove_intra = TRUE,  
+  cex = 1)
+```
+
+Before estimating a model we should investigate the correlation structure of the input data. The [`pair_cor()`](https://lukece.github.io/spflow/reference/pair_cor.html) method creates a correlation matrix, which we can represent using the [`cor_image()`](https://lukece.github.io/spflow/reference/cor_image.html). The formula is used clarify which variables should be included in the correlation matrix. The details of how to use this formula are explained later in this vignette and documented in [`?spflow`](https://lukece.github.io/spflow/reference/spflow.html).
+
+We need to more stringent of variables that are highly correlated into the model. So we need to do this analysis to weed out the variables.
+
+Can also be used to detect the suitable explanatory variables.
+
+```{r}
+cor_formula <- log(1 + TRIPS) ~ 
+  BUSSTOP_COUNT +
+  AGE7_12 +
+  AGE13_24 +
+  AGE25_64 +
+  SCHOOL_COUNT +
+  BUSINESS_COUNT +
+  RETAILS_COUNT +
+  FINSERV_COUNT +
+  + P_(log( 1 + DISTANCE))
+
+cor_mat <- pair_cor(mpsz_multinet, spflow_formula = cor_formula, add_lags_x = FALSE)
+
+colnames(cor_mat) <- paste0(substr(colnames(cor_mat),1,3),"...")
+
+cor_image(cor_mat, cex = 0.4)
+```
+
+From the matrix above - we can see that the age groups are highly correlated. We can choose to group them together.
+
+# Model Calibration
+
+The core function of the package is [`spflow()`](https://lukece.github.io/spflow/reference/spflow.html), which provides an interface to four different estimators of the spatial econometric interaction model.
+
+There are three different estimators supported.
+
+### **Maximum likelihood estimation (MLE)**
+
+Maximum likelihood estimation is the default estimation procedure. The matrix form estimation in the framework of this model was first developed by LeSage and Pace (2008) and then improved by Dargel (2021) .
+
+### **Spatial two-stage least squares (S2SLS)**
+
+The S2SLS estimator is an adaptation of the one proposed by Kelejian and Prucha (1998) , to the case of origin-destination flows, with up to three neighborhood matrices Dargel (2021) . A similar estimation is done by Tamesue and Tsutsumi (2016) . The user can activate the S2SLS estimation via the `estimation_control` argument using the input `spflow_control(estimation_method = "s2sls")`.
+
+### **Bayesian Markov Chain Monte Carlo (MCMC)**
+
+The MCMC estimator is based on the ideas of LeSage and Pace (2009) and incorporates the improvements proposed in Dargel (2021) . The estimation is based on a tuned Metropolis-Hastings sampler for the auto-regressive parameters, and for the remaining parameters it uses Gibbs sampling. The routine uses 5500 iterations of the sampling procedure and considers the first 2500 as burn-in period. The user can activate the S2SLS estimation via the `estimation_control` argument using the input `spflow_control(estimation_method = "mcmc")`.
+
+## Estimating with Default Values
+
+Estimation with default settings requires two arguments: a `spflow_network_multi-class` and a `spflow_formula`. The `spflow_formula` specifies the model we want to estimate. In this example, the dependent variable is a transformation of commuting flows and we use the do- shortcut to indicate that all available variables should be included in the model. Using the defaults leads to the most comprehensive spatial interaction model, which includes spatial lags of the dependent variable, the exogenous variables and additional attributes for intra-regional observations.
+
+```{r}
+results_default <- spflow(
+  spflow_formula = log(1 + TRIPS) ~ . + P_(log( 1 + DISTANCE)),
+  spflow_networks = mpsz_multinet)
+
+results_default
+```
+
+## Adjusting Formula
+
+We can adjust how the exogenous variables are to be used by wrapping them into the `D_()`, `O_()`, `I_()` and `P_()` functions. The variables in `P_()` are used as OD pair features and those in `D_()`, `O_()` and `I_()` are used as destination, origin and intra-regional features. We can take advantage of the formula interface to specify transformations and expand factor variables to dummies.
+
+## Base Model
+
+For the TRIPS and DIST - added + 1 to avoid any log(0) situations.
+
+```{r}
+
+spflow_formula  <- 
+  log(TRIPS + 1) ~
+  O_(BUSSTOP_COUNT +
+       AGE25_64) +
+  
+  D_(SCHOOL_COUNT +
+       BUSINESS_COUNT +
+       RETAILS_COUNT +
+       FINSERV_COUNT) +
+
+  P_(log(DISTANCE + 1))
+
+base_model  <- spflow(
+  spflow_formula,
+  mpsz_multinet)
+
+base_model
+```
+
+The Output will indicate which model - in this case - Model 9.
+
+::: callout-note
+```         
+Spatial correlation structure: SDM (model_9)
+R2_corr: 0.6942945   Observations: 97969  
+```
+:::
+
+The .lag - explains the spatial lag, how it affects the formula. The p-value will show whether it is significant. E.g.
+
+|                       |         |        |            |           |                                                                                              |
+|-----------------------|---------|--------|------------|-----------|----------------------------------------------------------------------------------------------|
+|                       | **est** | **sd** | **t.stat** | **p.val** | **Remarks**                                                                                  |
+| rho_d                 | 0.680   | 0.004  | 192.555    | 0.000     |                                                                                              |
+| rho_o                 | 0.678   | 0.004  | 187.731    | 0.000     |                                                                                              |
+| rho_w                 | -0.396  | 0.006  | -65.591    | 0.000     |                                                                                              |
+| (Intercept)           | 0.410   | 0.065  | 6.266      | 0.000     |                                                                                              |
+| (Intra)               | 1.313   | 0.081  | 16.263     | 0.000     |                                                                                              |
+| D_SCHOOL_COUNT        | 0.017   | 0.002  | 7.885      | 0.000     |                                                                                              |
+| D_SCHOOL_COUNT.lag1   | 0.002   | 0.004  | 0.551      | **0.581** | **Not significant**                                                                          |
+| D_BUSINESS_COUNT      | 0.000   | 0.000  | 3.015      | 0.003     |                                                                                              |
+| D_BUSINESS_COUNT.lag1 | 0.000   | 0.000  | -0.249     | **0.804** | **Not significant**                                                                          |
+| D_RETAILS_COUNT       | 0.000   | 0.000  | -0.306     | 0.759     |                                                                                              |
+| D_RETAILS_COUNT.lag1  | 0.000   | 0.000  | 0.152      | 0.880     |                                                                                              |
+| D_FINSERV_COUNT       | 0.002   | 0.000  | 6.787      | 0.000     | Both itself and neighbours are significant - due to Shenton Way and the Financial Hub areas. |
+| D_FINSERV_COUNT.lag1  | -0.002  | 0.001  | -3.767     | 0.000     |                                                                                              |
+| O_BUSSTOP_COUNT       | 0.002   | 0.000  | 6.806      | 0.000     |                                                                                              |
+| O_BUSSTOP_COUNT.lag1  | -0.001  | 0.000  | -2.364     | 0.018     |                                                                                              |
+| O_AGE25_64            | 0.000   | 0.000  | 7.336      | 0.000     |                                                                                              |
+| O_AGE25_64.lag1       | 0.000   | 0.000  | -2.797     | 0.005     |                                                                                              |
+| P_log(DISTANCE + 1)   | -0.050  | 0.007  | -6.793     | 0.000     |                                                                                              |
+
+## Residual Diagnostics
+
+We can also create Moran scatter plots to check whether the residuals still exhibit spatial autocorrelation with respect to the three potential neighborhood matrices.
+
+```{r}
+old_par <- par(mfrow = c(1, 3), mar = c(2,2,2,2))
+spflow_moran_plots(base_model)
+
+```
+
+```{r}
+res_corr <- pair_cor(base_model)
+colnames(res_corr) <- substr(colnames(res_corr),1,3)
+cor_image(res_corr)
+```
+
+## Working with Model Control
+
+```{r}
+spflow_formula  <- 
+  log(TRIPS + 1) ~
+  O_(BUSSTOP_COUNT +
+       AGE25_64) +
+  
+  D_(SCHOOL_COUNT +
+       BUSINESS_COUNT +
+       RETAILS_COUNT +
+       FINSERV_COUNT) +
+
+  P_(log(DISTANCE + 1))
+
+model_control <- spflow_control(
+  estimation_method = "mle",
+  model = "model_1")
+
+mle_model_1  <- spflow(
+  spflow_formula,
+  spflow_networks = mpsz_multinet,
+  estimation_control = model_control)
+
+mle_model_1
+```
+
+```{r}
+model_control <- spflow_control(
+  estimation_method = "mle",
+  model = "model_2")
+
+mle_model_2  <- spflow(
+  spflow_formula,
+  spflow_networks = mpsz_multinet,
+  estimation_control = model_control)
+
+mle_model_2
+```
+
+```{r}
+model_control <- spflow_control(
+  estimation_method = "mle",
+  model = "model_8")
+
+mle_model_8  <- spflow(
+  spflow_formula,
+  spflow_networks = mpsz_multinet,
+  estimation_control = model_control)
+
+mle_model_8
+```
+
+Model 8 - explicitly brings out the intra-zonal flow. This is slightly better than the base model (R2 of 0.6942945).
+
+```{r}
+old_par <- par(mfrow = c(1, 3), mar = c(2,2,2,2))
+spflow_moran_plots(mle_model_8)
+```
